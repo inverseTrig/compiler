@@ -3,7 +3,7 @@ var fee, fi, fo, fum: integer;
 begin
   fee3f := 4;
   fi := 5;
-  fo := 3 * fee + fi;
+  fo := 3 * 3fee + fi;
   if fo < 13
     then
       fo := 13.46
