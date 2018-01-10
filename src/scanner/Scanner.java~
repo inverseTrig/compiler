@@ -582,7 +582,7 @@ class Scanner {
           case 5: 
             { /** FOUND SYMBOL */
 					
-					return new Token(yytext(), LUT.get(lexeme));
+					return new Token(yytext(), LUT.get(yytext()));
             }
           case 10: break;
           default:

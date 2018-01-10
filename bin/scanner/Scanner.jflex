@@ -68,7 +68,7 @@ other			= .
 {symbol}		{
 					/** FOUND SYMBOL */
 					
-					return new Token(yytext(), LUT.get(lexeme));
+					return new Token(yytext(), LUT.get(yytext()));
 				}
 
 {other}			{
