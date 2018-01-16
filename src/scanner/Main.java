@@ -14,8 +14,8 @@ public class Main {
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(filename);
-        } catch (Exception e ) { e.printStackTrace();}
-        InputStreamReader isr = new InputStreamReader( fis);
+        } catch (Exception e) { e.printStackTrace(); }
+        InputStreamReader isr = new InputStreamReader(fis);
         Scanner scanner = new Scanner(isr);
         Token aToken = null;
         do
@@ -27,6 +27,7 @@ public class Main {
             //if( aToken != null && !aToken.equals( ""))
                 System.out.println("The token returned was " + aToken);
         } while(aToken != null);
+        
 	}
 
 }
