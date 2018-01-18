@@ -12,7 +12,7 @@ class ScannerTest {
 	
 	// Reading in input.txt file for test cases.
 	@Test
-	void testNextTokenYytext() throws IOException {
+	void testNextToken() throws IOException {
 		
 		String filename = System.getProperty("user.dir") + "/input.txt";
 		FileInputStream fis = null;
@@ -28,23 +28,52 @@ class ScannerTest {
         expectedToken = new Token("program", TokenType.PROGRAM);
         returnedToken = scanner.nextToken();
         assertEquals(expectedToken, returnedToken);
-		assertEquals(expectedToken.lexeme, scanner.yytext());
 		
 		expectedToken = new Token("foo", TokenType.ID);
         returnedToken = scanner.nextToken();
         assertEquals(expectedToken, returnedToken);
-		assertEquals(expectedToken.lexeme, scanner.yytext());
 		
 		expectedToken = new Token(";", TokenType.SEMICOLON);
         returnedToken = scanner.nextToken();
         assertEquals(expectedToken, returnedToken);
-		assertEquals(expectedToken.lexeme, scanner.yytext());
 		
 		expectedToken = new Token("var", TokenType.VAR);
         returnedToken = scanner.nextToken();
         assertEquals(expectedToken, returnedToken);
-		assertEquals(expectedToken.lexeme, scanner.yytext());
 		
 	}
+	
+	// Reading in input.txt file for test cases.
+		@Test
+		void testYytext() throws IOException {
+			
+			String filename = System.getProperty("user.dir") + "/input.txt";
+			FileInputStream fis = null;
+	        try {
+	            fis = new FileInputStream(filename);
+	        } catch (Exception e) { e.printStackTrace(); }
+	        InputStreamReader isr = new InputStreamReader(fis);
+	        Scanner scanner = new Scanner(isr);
+	        
+	        Token expectedToken;
+	        Token returnedToken;
+	        
+	        expectedToken = new Token("program", TokenType.PROGRAM);
+	        returnedToken = scanner.nextToken();
+			assertEquals(expectedToken.lexeme, scanner.yytext());
+			
+			expectedToken = new Token("foo", TokenType.ID);
+	        returnedToken = scanner.nextToken();
+			assertEquals(expectedToken.lexeme, scanner.yytext());
+			
+			expectedToken = new Token(";", TokenType.SEMICOLON);
+	        returnedToken = scanner.nextToken();
+			assertEquals(expectedToken.lexeme, scanner.yytext());
+			
+			expectedToken = new Token("var", TokenType.VAR);
+	        returnedToken = scanner.nextToken();
+			assertEquals(expectedToken.lexeme, scanner.yytext());
+			
+		}
 
 }
