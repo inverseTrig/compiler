@@ -13,6 +13,7 @@ class ScannerTest {
 	// Reading in input.txt file for test cases.
 	@Test
 	void testNextTokenYytext() throws IOException {
+		
 		String filename = System.getProperty("user.dir") + "/input.txt";
 		FileInputStream fis = null;
         try {
@@ -21,8 +22,11 @@ class ScannerTest {
         InputStreamReader isr = new InputStreamReader(fis);
         Scanner scanner = new Scanner(isr);
         
-        Token expectedToken = new Token("program", TokenType.PROGRAM);
-        Token returnedToken = scanner.nextToken();
+        Token expectedToken;
+        Token returnedToken;
+        
+        expectedToken = new Token("program", TokenType.PROGRAM);
+        returnedToken = scanner.nextToken();
         assertEquals(expectedToken, returnedToken);
 		assertEquals(expectedToken.lexeme, scanner.yytext());
 		
