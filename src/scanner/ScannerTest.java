@@ -21,17 +21,26 @@ class ScannerTest {
         InputStreamReader isr = new InputStreamReader(fis);
         Scanner scanner = new Scanner(isr);
         
-		assertEquals(new Token("program", TokenType.PROGRAM), scanner.nextToken());
+        Token expectedToken = new Token("program", TokenType.PROGRAM);
+        Token returnedToken = scanner.nextToken();
+        assertEquals(expectedToken, returnedToken);
 		assertEquals("program", scanner.yytext());
 		
-		assertEquals(new Token("foo", TokenType.ID), scanner.nextToken());
+		expectedToken = new Token("foo", TokenType.ID);
+        returnedToken = scanner.nextToken();
+        assertEquals(expectedToken, returnedToken);
 		assertEquals("foo", scanner.yytext());
 		
-		assertEquals(new Token(";", TokenType.SEMICOLON), scanner.nextToken());
+		expectedToken = new Token(";", TokenType.SEMICOLON);
+        returnedToken = scanner.nextToken();
+        assertEquals(expectedToken, returnedToken);
 		assertEquals(";", scanner.yytext());
 		
-		assertEquals(new Token("var", TokenType.VAR), scanner.nextToken());
+		expectedToken = new Token("var", TokenType.VAR);
+        returnedToken = scanner.nextToken();
+        assertEquals(expectedToken, returnedToken);
 		assertEquals("var", scanner.yytext());
+		
 	}
 
 }
