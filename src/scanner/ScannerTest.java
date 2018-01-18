@@ -24,22 +24,22 @@ class ScannerTest {
         Token expectedToken = new Token("program", TokenType.PROGRAM);
         Token returnedToken = scanner.nextToken();
         assertEquals(expectedToken, returnedToken);
-		assertEquals("program", scanner.yytext());
+		assertEquals(expectedToken.lexeme, scanner.yytext());
 		
 		expectedToken = new Token("foo", TokenType.ID);
         returnedToken = scanner.nextToken();
         assertEquals(expectedToken, returnedToken);
-		assertEquals("foo", scanner.yytext());
+		assertEquals(expectedToken.lexeme, scanner.yytext());
 		
 		expectedToken = new Token(";", TokenType.SEMICOLON);
         returnedToken = scanner.nextToken();
         assertEquals(expectedToken, returnedToken);
-		assertEquals(";", scanner.yytext());
+		assertEquals(expectedToken.lexeme, scanner.yytext());
 		
 		expectedToken = new Token("var", TokenType.VAR);
         returnedToken = scanner.nextToken();
         assertEquals(expectedToken, returnedToken);
-		assertEquals("var", scanner.yytext());
+		assertEquals(expectedToken.lexeme, scanner.yytext());
 		
 	}
 
