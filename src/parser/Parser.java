@@ -61,7 +61,11 @@ public class Parser {
 	}
 	
 	public void subprogram_declarations() {
-
+		if (lookAhead.getType() == TokenType.FUNCTION) {
+			subprogram_declaration();
+			match(TokenType.SEMICOLON);
+			subprogram_declarations();
+		}
 	}
 	
 	public void subprogram_declaration() {
