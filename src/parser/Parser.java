@@ -20,31 +20,35 @@ public class Parser {
 	}
 	
 	public void identifier_list() {
-		
+		match(TokenType.ID);
+		if (lookAhead.getType() == TokenType.COMMA) {
+			match(TokenType.COMMA);
+			identifier_list();
+		}
 	}
 	
 	public void declarations() {
-		
+
 	}
 	
 	public void type() {
-		
+
 	}
 	
 	public void standard_type() {
-		
+
 	}
 	
 	public void subprogram_declarations() {
-		
+
 	}
 	
 	public void subprogram_declaration() {
-		
+
 	}
 	
 	public void subprogram_head() {
-		
+
 	}
 	
 	public void arguments() {
