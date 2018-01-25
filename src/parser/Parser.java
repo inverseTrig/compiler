@@ -125,7 +125,14 @@ public class Parser {
 	}
 	
 	public void statement_list() {
-		
+		if (lookAhead.getType() == TokenType.ID || lookAhead.getType() == TokenType.BEGIN ||
+				lookAhead.getType() == TokenType.IF || lookAhead.getType() == TokenType.WHILE) {
+			statement();
+		}
+		if (lookAhead.getType() == TokenType.SEMICOLON) {
+			match(TokenType.SEMICOLON);
+			statement_list();
+		}
 	}
 	
 	public void statement() {
