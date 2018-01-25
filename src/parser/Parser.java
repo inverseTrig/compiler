@@ -170,7 +170,12 @@ public class Parser {
 	}
 	
 	public void procedure_statement() {
-		
+		match(TokenType.ID);
+		if (lookAhead.getType() == TokenType.LPARENTHESES) {
+			match(TokenType.LPARENTHESES);
+			expression_list();
+			match(TokenType.RPARENTHESES);
+		}
 	}
 	
 	public void expression_list() {
