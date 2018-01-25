@@ -8,10 +8,7 @@ public class Token {
         this.lexeme = l;
         this.type = t;
     }
-    
-    public String getLexeme() {
-		return this.lexeme;
-	}
+
     
     @Override
     public String toString() { 
@@ -45,6 +42,22 @@ public class Token {
 		if (type != other.type)
 			return false;
 		return true;
+	}
+
+	public TokenType getType() {
+		return type;
+	}
+
+	public void setType(TokenType type) {
+		this.type = type;
+	}
+
+    public String getLexeme() {
+		return this.lexeme;
+	}
+    
+	public void setLexeme(String lexeme) {
+		this.lexeme = lexeme;
 	}
     
     
