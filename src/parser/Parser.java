@@ -161,7 +161,12 @@ public class Parser {
 	}
 	
 	public void variable() {
-		
+		match(TokenType.ID);
+		if (lookAhead.getType() == TokenType.LSQBRACKET) {
+			match(TokenType.LSQBRACKET);
+			expression();
+			match(TokenType.RSQBRACKET);
+		}
 	}
 	
 	public void procedure_statement() {
