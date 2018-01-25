@@ -94,7 +94,11 @@ public class Parser {
 	}
 	
 	public void arguments() {
-		
+		if (lookAhead.getType() == TokenType.LPARENTHESES) {
+			match(TokenType.LPARENTHESES);
+			parameter_list();
+			match(TokenType.RPARENTHESES);
+		}
 	}
 	
 	public void parameter_list() {
