@@ -52,7 +52,12 @@ public class Parser {
 	}
 	
 	public void standard_type() {
-
+		if (lookAhead.getType() == TokenType.INTEGER) {
+			match(TokenType.INTEGER);
+		}
+		else if (lookAhead.getType() == TokenType.REAL) {
+			match(TokenType.REAL);
+		}
 	}
 	
 	public void subprogram_declarations() {
