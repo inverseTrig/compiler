@@ -136,7 +136,28 @@ public class Parser {
 	}
 	
 	public void statement() {
-		
+		if (lookAhead.getType() == TokenType.ID) {
+			variable();
+			match(TokenType.BECOMES);
+			expression();
+		}
+		else if (lookAhead.getType() == TokenType.BEGIN) {
+			compound_statement();
+		}
+		else if (lookAhead.getType() == TokenType.IF) {
+			match(TokenType.IF);
+			expression();
+			match(TokenType.THEN);
+			statement();
+			match(TokenType.ELSE);
+			statement();
+		}
+		else if (lookAhead.getType() == TokenType.WHILE) {
+			match(TokenType.WHILE);
+			expression();
+			match(TokenType.DO);
+			statement();
+		}
 	}
 	
 	public void variable() {
