@@ -1,5 +1,6 @@
 package scanner;
 
+
 /**
  * This jflex file is for HeeChan Kang's Scanner
  */
@@ -9,7 +10,7 @@ package scanner;
 
 
 %%
-
+%public
 %class			Scanner   	/* Names the produced java file */
 %function		nextToken 	/* Renames the yylex() function */
 %type			Token     	/* Defines the return type of the scanning function */
