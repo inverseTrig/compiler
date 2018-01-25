@@ -28,7 +28,14 @@ public class Parser {
 	}
 	
 	public void declarations() {
-
+		if (lookAhead.getType() == TokenType.VAR) {
+			match(TokenType.VAR);
+			identifier_list();
+			match(TokenType.COLON);
+			type();
+			match(TokenType.SEMICOLON);
+			declarations();
+		}
 	}
 	
 	public void type() {
