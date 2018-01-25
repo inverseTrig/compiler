@@ -61,7 +61,7 @@ public class Parser {
 	}
 	
 	public void subprogram_declarations() {
-		if (lookAhead.getType() == TokenType.FUNCTION) {
+		if (lookAhead.getType() == TokenType.FUNCTION || lookAhead.getType() == TokenType.PROCEDURE) {
 			subprogram_declaration();
 			match(TokenType.SEMICOLON);
 			subprogram_declarations();
@@ -76,7 +76,21 @@ public class Parser {
 	}
 	
 	public void subprogram_head() {
-
+		if (lookAhead.getType() == TokenType.FUNCTION) {
+			match(TokenType.FUNCTION);
+			match(TokenType.ID);
+			arguments();
+			match(TokenType.COLON);
+			standard_type();
+			match(TokenType.SEMICOLON);
+		}
+		else if (lookAhead.getType() == TokenType.PROCEDURE) {
+			match(TokenType.PROCEDURE);
+			match(TokenType.ID);
+			arguments();
+			match(TokenType.SEMICOLON);
+		}
+		
 	}
 	
 	public void arguments() {
