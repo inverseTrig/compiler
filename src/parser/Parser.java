@@ -39,7 +39,16 @@ public class Parser {
 	}
 	
 	public void type() {
-
+		if (lookAhead.getType() == TokenType.ARRAY) {
+			match(TokenType.ARRAY);
+			match(TokenType.LSQBRACKET);
+			match(TokenType.NUMBER);
+			match(TokenType.COLON);
+			match(TokenType.NUMBER);
+			match(TokenType.RSQBRACKET);
+			match(TokenType.OF);
+		}
+		standard_type();
 	}
 	
 	public void standard_type() {
