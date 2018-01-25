@@ -69,7 +69,10 @@ public class Parser {
 	}
 	
 	public void subprogram_declaration() {
-
+		subprogram_head();
+		declarations();
+		subprogram_declarations();
+		compound_statement();
 	}
 	
 	public void subprogram_head() {
