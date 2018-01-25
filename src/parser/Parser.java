@@ -102,7 +102,13 @@ public class Parser {
 	}
 	
 	public void parameter_list() {
-		
+		identifier_list();
+		match(TokenType.COLON);
+		type();
+		if (lookAhead.getType() == TokenType.SEMICOLON) {
+			match(TokenType.SEMICOLON);
+			parameter_list();
+		}
 	}
 	
 	public void compound_statement() {
