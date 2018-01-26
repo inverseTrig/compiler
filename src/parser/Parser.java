@@ -215,7 +215,15 @@ public class Parser {
 	}
 	
 	public void sign() {
-		
+		if (lookAhead.getType() == TokenType.PLUS) {
+			match(TokenType.PLUS);
+		}
+		else if (lookAhead.getType() == TokenType.MINUS) {
+			match(TokenType.MINUS);
+		}
+		else {
+			error("sign()");
+		}
 	}
 	
 	public boolean isRelop(Token token) {
