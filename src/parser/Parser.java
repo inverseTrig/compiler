@@ -226,6 +226,16 @@ public class Parser {
 		}
 	}
 	
+	public boolean isMulop(Token token) {
+		TokenType tokentype = token.getType();
+		if (tokentype == TokenType.ASTERISK || tokentype == TokenType.SLASH || 
+				tokentype == TokenType.DIV || tokentype == TokenType.MOD || 
+				tokentype == TokenType.AND) {
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean isRelop(Token token) {
 		TokenType tokentype = token.getType();
 		if (tokentype == TokenType.EQUAL || tokentype == TokenType.NOTEQUAL || 
