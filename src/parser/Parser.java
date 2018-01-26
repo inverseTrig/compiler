@@ -199,7 +199,11 @@ public class Parser {
 	}
 	
 	public void simple_part() {
-		
+		if (isAddop(lookAhead)) {
+			addop();
+			term();
+			simple_part();
+		}
 	}
 	
 	public void term() {
@@ -264,6 +268,32 @@ public class Parser {
 		}
 	}
 	
+	public boolean isAddop(Token token) {
+		TokenType tokentype = token.getType();
+		if (tokentype == TokenType.PLUS || tokentype == TokenType.MINUS || 
+				tokentype == TokenType.OR) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void addop() {
+		switch (lookAhead.getType()) {
+		case PLUS:
+			match(TokenType.PLUS);
+			break;
+		case MINUS:
+			match(TokenType.MINUS);
+			break;
+		case OR:
+			match(TokenType.OR);
+			break;
+		default:
+			error("addop()");
+			break;
+		}
+	}
+	
 	public boolean isMulop(Token token) {
 		TokenType tokentype = token.getType();
 		if (tokentype == TokenType.ASTERISK || tokentype == TokenType.SLASH || 
@@ -309,27 +339,27 @@ public class Parser {
 	
 	public void relop() {
 		switch (lookAhead.getType()) {
-			case EQUAL:
-				match(TokenType.EQUAL);
-				break;
-			case NOTEQUAL:
-				match(TokenType.NOTEQUAL);
-				break;
-			case LESSTHAN:
-				match(TokenType.LESSTHAN);
-				break;
-			case LESSTHANOREQUALTO:
-				match(TokenType.LESSTHANOREQUALTO);
-				break;
-			case GREATERTHAN:
-				match(TokenType.GREATERTHAN);
-				break;
-			case GREATERTHANOREQUALTO:
-				match(TokenType.GREATERTHANOREQUALTO);
-				break;
-			default:
-				error("relop()");
-				break;
+		case EQUAL:
+			match(TokenType.EQUAL);
+			break;
+		case NOTEQUAL:
+			match(TokenType.NOTEQUAL);
+			break;
+		case LESSTHAN:
+			match(TokenType.LESSTHAN);
+			break;
+		case LESSTHANOREQUALTO:
+			match(TokenType.LESSTHANOREQUALTO);
+			break;
+		case GREATERTHAN:
+			match(TokenType.GREATERTHAN);
+			break;
+		case GREATERTHANOREQUALTO:
+			match(TokenType.GREATERTHANOREQUALTO);
+			break;
+		default:
+			error("relop()");
+			break;
 		}
 	}
 	
