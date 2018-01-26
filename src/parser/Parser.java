@@ -195,7 +195,11 @@ public class Parser {
 	}
 	
 	public void simple_expression() {
-		
+		if (lookAhead.getType() == TokenType.MINUS || lookAhead.getType() == TokenType.PLUS) {
+			sign();
+		}
+		term();
+		simple_part();
 	}
 	
 	public void simple_part() {
