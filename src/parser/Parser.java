@@ -179,11 +179,19 @@ public class Parser {
 	}
 	
 	public void expression_list() {
-		
+		expression();
+		if (lookAhead.getType() == TokenType.COMMA) {
+			match(TokenType.COMMA);
+			expression_list();
+		}
 	}
 	
 	public void expression() {
-		
+		simple_expression();
+		if (isRelop(lookAhead)) {
+			relop();
+			simple_expression();
+		}
 	}
 	
 	public void simple_expression() {
@@ -210,7 +218,41 @@ public class Parser {
 		
 	}
 	
+	public boolean isRelop(Token token) {
+		TokenType tokentype = token.getType();
+		if (tokentype == TokenType.EQUAL || tokentype == TokenType.NOTEQUAL || 
+				tokentype == TokenType.LESSTHAN || tokentype == TokenType.LESSTHANOREQUALTO || 
+				tokentype == TokenType.GREATERTHAN || tokentype == TokenType.GREATERTHANOREQUALTO) {
+			return true;
+		}
+		return false;
+	}
 	
+	public void relop() {
+		switch (lookAhead.getType()) {
+			case EQUAL:
+				match(TokenType.EQUAL);
+				break;
+			case NOTEQUAL:
+				match(TokenType.NOTEQUAL);
+				break;
+			case LESSTHAN:
+				match(TokenType.LESSTHAN);
+				break;
+			case LESSTHANOREQUALTO:
+				match(TokenType.LESSTHANOREQUALTO);
+				break;
+			case GREATERTHAN:
+				match(TokenType.GREATERTHAN);
+				break;
+			case GREATERTHANOREQUALTO:
+				match(TokenType.GREATERTHANOREQUALTO);
+				break;
+			default:
+				error("relop");
+				break;
+		}
+	}
 	
 	public void match(TokenType expected) {
 		if (this.lookAhead.getType() == expected) {
