@@ -90,7 +90,6 @@ public class Parser {
 			arguments();
 			match(TokenType.SEMICOLON);
 		}
-		
 	}
 	
 	public void arguments() {
