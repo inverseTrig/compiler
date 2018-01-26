@@ -203,15 +203,53 @@ public class Parser {
 	}
 	
 	public void term() {
-		
+		factor();
+		term_part();
 	}
 	
 	public void term_part() {
-		
+		if (isMulop(lookAhead)) {
+			mulop();
+			factor();
+			term_part();
+		}
 	}
 	
 	public void factor() {
-		
+		// id
+		if (lookAhead.getType() == TokenType.ID) {
+			match(TokenType.ID);
+			// id [ expression ]
+			if (lookAhead.getType() == TokenType.LSQBRACKET) {
+				match(TokenType.LSQBRACKET);
+				expression();
+				match(TokenType.RSQBRACKET);
+			}
+			// id ( expression_list )
+			else if (lookAhead.getType() == TokenType.LPARENTHESES) {
+				match(TokenType.LPARENTHESES);
+				expression_list();
+				match(TokenType.RPARENTHESES);
+			}
+		}
+		// num
+		else if (lookAhead.getType() == TokenType.NUMBER) {
+			match(TokenType.NUMBER);
+		}
+		// ( expression )
+		else if (lookAhead.getType() == TokenType.LPARENTHESES) {
+			match(TokenType.LPARENTHESES);
+			expression();
+			match(TokenType.RPARENTHESES);
+		}
+		// not factor
+		else if (lookAhead.getType() == TokenType.NOT) {
+			match(TokenType.NOT);
+			factor();
+		}
+		else {
+			error("factor()");
+		}
 	}
 	
 	public void sign() {
@@ -234,6 +272,29 @@ public class Parser {
 			return true;
 		}
 		return false;
+	}
+	
+	public void mulop() {
+		switch (lookAhead.getType()) {
+		case ASTERISK:
+			match(TokenType.ASTERISK);
+			break;
+		case SLASH:
+			match(TokenType.SLASH);
+			break;
+		case DIV:
+			match(TokenType.DIV);
+			break;
+		case MOD:
+			match(TokenType.MOD);
+			break;
+		case AND:
+			match(TokenType.AND);
+			break;
+		default:
+			error("mulop()");
+			break;
+		}
 	}
 	
 	public boolean isRelop(Token token) {
@@ -267,7 +328,7 @@ public class Parser {
 				match(TokenType.GREATERTHANOREQUALTO);
 				break;
 			default:
-				error("relop");
+				error("relop()");
 				break;
 		}
 	}
