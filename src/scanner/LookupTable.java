@@ -5,6 +5,10 @@ import java.util.HashMap;
 @SuppressWarnings("serial")
 public class LookupTable extends HashMap<String, TokenType> {
 	
+	/**
+	 * Constructor for the LookUpTable -- this instantiates a HashMap that takes in a String and a Token Type
+	 * Each lexeme is paired with its appropriate TokenType in here. The Scanner looks in here to see if the lexeme it takes it belongs.
+	 */
 	public LookupTable() {
 		this.put("and", TokenType.AND);
 		this.put("array", TokenType.ARRAY);
