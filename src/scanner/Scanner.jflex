@@ -2,7 +2,9 @@ package scanner;
 
 
 /**
- * This jflex file is for HeeChan Kang's Scanner
+ * This Scanner is generated using JFlex tool.
+ * Though most of the grunt work is done by JFlex, the major methods (namely yytext() and nextToken()) have been thoroughly tested.
+ * 
  */
 
 
