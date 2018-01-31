@@ -1,15 +1,29 @@
 package scanner;
 
+/**
+ * @author heechan
+ * Token class is where we define a new object called Token. A Token will hold two values - a String lexeme, and a TokenType type.
+ * The Scanner reads in a lexeme, uses the LookupTable to find if the lexeme exists, and if so, matches it to its appropriate TokenType.
+ * Then a Token object is created, with its lexeme and the appropriate type.
+ */
 public class Token {
     public String lexeme;
     public TokenType type;
     
+    /**
+     * Constructor for a Token. A Token MUST always have a String lexeme and a TokenType type. Thus it will not have an empty constructor.
+     * @param l String lexeme read in via the Scanner.
+     * @param t TokenType type is matched using the LookupTable.
+     */
     public Token( String l, TokenType t) {
         this.lexeme = l;
         this.type = t;
     }
 
-    
+    /**
+     * Override the toString() method, as it originally prints out hex codes.
+     * The if statement is there for readability when printed out, as I use tabbing, this makes it such that everything is correctly aligned for ease of view.
+     */
     @Override
     public String toString() { 
     	if (this.type == TokenType.LESSTHANOREQUALTO ||
@@ -25,6 +39,10 @@ public class Token {
     }
 
 
+    /**
+     * Override equals() method for JUnit testing to run appropriately.
+     * Comparing objects in JUnit without overriding equals() will return false unless they are literally the same object.
+     */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
