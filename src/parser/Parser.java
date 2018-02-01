@@ -3,12 +3,22 @@ import java.io.IOException;
 
 import scanner.*;
 
+/**
+ * @author heechan
+ * The grammar here is based off of the Production Rules sheet we received from our professor.
+ */
 public class Parser {
 	
 	private Token lookAhead;
 	private Scanner scanner;
 	
-	
+	/**
+	 * program id;
+	 * declarations
+	 * subprogram_declarations
+	 * compound_statement
+	 * .
+	 */
 	public void program() {
 		match(TokenType.PROGRAM);
 		match(TokenType.ID);
@@ -19,6 +29,10 @@ public class Parser {
 		match(TokenType.PERIOD);
 	}
 	
+	/**
+	 * id |
+	 * id , idenfitier_list
+	 */
 	public void identifier_list() {
 		match(TokenType.ID);
 		if (lookAhead.getType() == TokenType.COMMA) {
@@ -27,6 +41,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * var identifier_list : type ; declarations |
+	 * lambda
+	 */
 	public void declarations() {
 		if (lookAhead.getType() == TokenType.VAR) {
 			match(TokenType.VAR);
@@ -38,6 +56,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * standard_type |
+	 * array [ num : num ] of standard_type
+	 */
 	public void type() {
 		if (lookAhead.getType() == TokenType.ARRAY) {
 			match(TokenType.ARRAY);
@@ -51,6 +73,10 @@ public class Parser {
 		standard_type();
 	}
 	
+	/**
+	 * integer|
+	 * real
+	 */
 	public void standard_type() {
 		if (lookAhead.getType() == TokenType.INTEGER) {
 			match(TokenType.INTEGER);
@@ -60,6 +86,11 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * subprogram_declaration ;
+	 * subprogram_declarations |
+	 * lambda
+	 */
 	public void subprogram_declarations() {
 		if (lookAhead.getType() == TokenType.FUNCTION || lookAhead.getType() == TokenType.PROCEDURE) {
 			subprogram_declaration();
@@ -68,6 +99,12 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * subprogram_head
+	 * declarations
+	 * subprogram_declarations
+	 * compound_statement
+	 */
 	public void subprogram_declaration() {
 		subprogram_head();
 		declarations();
@@ -75,6 +112,10 @@ public class Parser {
 		compound_statement();
 	}
 	
+	/**
+	 * function id arguments : standard_type ; |
+	 * procedure id arguments ;
+	 */
 	public void subprogram_head() {
 		if (lookAhead.getType() == TokenType.FUNCTION) {
 			match(TokenType.FUNCTION);
@@ -92,6 +133,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * ( parameter_list ) |
+	 * lambda
+	 */
 	public void arguments() {
 		if (lookAhead.getType() == TokenType.LPARENTHESES) {
 			match(TokenType.LPARENTHESES);
@@ -100,6 +145,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * identifier_list : type |
+	 * idenfiter_list : type ; parameter_list
+	 */
 	public void parameter_list() {
 		identifier_list();
 		match(TokenType.COLON);
@@ -110,12 +159,19 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * begin optional_statements end
+	 */
 	public void compound_statement() {
 		match(TokenType.BEGIN);
 		optional_statements();
 		match(TokenType.END);
 	}
 	
+	/**
+	 * statement_list |
+	 * lambda
+	 */
 	public void optional_statements() {
 		if (lookAhead.getType() == TokenType.ID || lookAhead.getType() == TokenType.BEGIN ||
 				lookAhead.getType() == TokenType.IF || lookAhead.getType() == TokenType.WHILE) {
@@ -123,6 +179,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * statement |
+	 * statement ; statement_list
+	 */
 	public void statement_list() {
 		statement();
 		if (lookAhead.getType() == TokenType.SEMICOLON) {
@@ -131,6 +191,15 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * variable assignop expression |						// Not sure how to differentiate this id
+	 * procedure_statement |								// and this id
+	 * compound_statement |									// if (BEGIN)
+	 * if expression then statement else statement |		// if (IF)
+	 * while expression do statement |						// if (WHILE)
+	 * read ( id ) |										// this hasn't been implemented
+	 * write ( expression )									// this hasn't been implemented
+	 */
 	public void statement() {
 		if (lookAhead.getType() == TokenType.ID) {
 			variable();
@@ -156,6 +225,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * id |
+	 * id [ expression ]
+	 */
 	public void variable() {
 		match(TokenType.ID);
 		if (lookAhead.getType() == TokenType.LSQBRACKET) {
@@ -165,6 +238,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * id |
+	 * id ( expression_list )
+	 */
 	public void procedure_statement() {
 		match(TokenType.ID);
 		if (lookAhead.getType() == TokenType.LPARENTHESES) {
@@ -174,6 +251,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * expression |
+	 * expression , expression_list
+	 */
 	public void expression_list() {
 		expression();
 		if (lookAhead.getType() == TokenType.COMMA) {
@@ -182,6 +263,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * simple_expression |
+	 * simple_expression relop simple_expression
+	 */
 	public void expression() {
 		simple_expression();
 		if (isRelop(lookAhead)) {
@@ -190,6 +275,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * term simple_part |
+	 * sign term simple_part
+	 */
 	public void simple_expression() {
 		if (lookAhead.getType() == TokenType.MINUS || lookAhead.getType() == TokenType.PLUS) {
 			sign();
@@ -198,6 +287,10 @@ public class Parser {
 		simple_part();
 	}
 	
+	/**
+	 * addop term simple_part |
+	 * lambda
+	 */
 	public void simple_part() {
 		if (isAddop(lookAhead)) {
 			addop();
@@ -206,11 +299,18 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * factor term_part
+	 */
 	public void term() {
 		factor();
 		term_part();
 	}
 	
+	/**
+	 * mulop factor term_part |
+	 * lambda
+	 */
 	public void term_part() {
 		if (isMulop(lookAhead)) {
 			mulop();
@@ -219,34 +319,37 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * id |
+	 * id [ expression ] |
+	 * id ( expression_list ) |
+	 * num |
+	 * ( expression ) |
+	 * not factor
+	 */
 	public void factor() {
 		// id
 		if (lookAhead.getType() == TokenType.ID) {
 			match(TokenType.ID);
-			// id [ expression ]
 			if (lookAhead.getType() == TokenType.LSQBRACKET) {
 				match(TokenType.LSQBRACKET);
 				expression();
 				match(TokenType.RSQBRACKET);
 			}
-			// id ( expression_list )
 			else if (lookAhead.getType() == TokenType.LPARENTHESES) {
 				match(TokenType.LPARENTHESES);
 				expression_list();
 				match(TokenType.RPARENTHESES);
 			}
 		}
-		// num
 		else if (lookAhead.getType() == TokenType.NUMBER) {
 			match(TokenType.NUMBER);
 		}
-		// ( expression )
 		else if (lookAhead.getType() == TokenType.LPARENTHESES) {
 			match(TokenType.LPARENTHESES);
 			expression();
 			match(TokenType.RPARENTHESES);
 		}
-		// not factor
 		else if (lookAhead.getType() == TokenType.NOT) {
 			match(TokenType.NOT);
 			factor();
@@ -256,6 +359,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * + |
+	 * -
+	 */
 	public void sign() {
 		if (lookAhead.getType() == TokenType.PLUS) {
 			match(TokenType.PLUS);
@@ -268,6 +375,11 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * Checks if the token that is passed in is a +, -, or OR.
+	 * @param token
+	 * @return boolean true or false based on the result
+	 */
 	public boolean isAddop(Token token) {
 		TokenType tokentype = token.getType();
 		if (tokentype == TokenType.PLUS || tokentype == TokenType.MINUS || 
@@ -277,6 +389,9 @@ public class Parser {
 		return false;
 	}
 	
+	/**
+	 * Matches one of the addops specified above, +, -, or OR.
+	 */
 	public void addop() {
 		switch (lookAhead.getType()) {
 		case PLUS:
@@ -294,6 +409,11 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * Checks if the token that is passed in is a *, /, DIV, MOD, or AND.
+	 * @param token
+	 * @return boolean true or false based on the result
+	 */
 	public boolean isMulop(Token token) {
 		TokenType tokentype = token.getType();
 		if (tokentype == TokenType.ASTERISK || tokentype == TokenType.SLASH || 
@@ -304,6 +424,9 @@ public class Parser {
 		return false;
 	}
 	
+	/**
+	 * Matches one of the mulops specified above, *, /, DIV, MOD, or AND.
+	 */
 	public void mulop() {
 		switch (lookAhead.getType()) {
 		case ASTERISK:
@@ -327,6 +450,11 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * Checks if the token that is passed in is a =, <>, <, <=, >=, or >.
+	 * @param token
+	 * @return boolean true or false based on the result
+	 */
 	public boolean isRelop(Token token) {
 		TokenType tokentype = token.getType();
 		if (tokentype == TokenType.EQUAL || tokentype == TokenType.NOTEQUAL || 
@@ -337,6 +465,9 @@ public class Parser {
 		return false;
 	}
 	
+	/**
+	 * Matches one of the mulops specified above, =, <>, <, <=, >=, or >.
+	 */
 	public void relop() {
 		switch (lookAhead.getType()) {
 		case EQUAL:
