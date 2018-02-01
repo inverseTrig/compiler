@@ -7,8 +7,9 @@ import org.junit.jupiter.api.Test;
 class ParserTest {
 
 	@Test
-	void test() {
-		fail("Not yet implemented");
+	void testFactor() {
+		Parser parser = new Parser("43", false);
+		parser.factor();
 	}
 
 }
