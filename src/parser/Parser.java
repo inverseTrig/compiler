@@ -1,5 +1,9 @@
 package parser;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+
 import scanner.*;
 
 
@@ -11,6 +15,31 @@ public class Parser {
 	
 	private Token lookAhead;
 	private Scanner scanner;
+	
+	/**
+	 * Constructor for the Parser. Here, we pass in a string and a boolean.
+	 * The boolean indicates if the string is a file name or a string.
+	 * @param s String that is passed in.
+	 * @param isFile boolean that indicates if the String is a file name or not.
+	 */
+	public Parser(String s, boolean isFile) {
+		if (isFile) {
+			String filename = System.getProperty("user.dir") + "/" + s + ".txt";
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(filename);
+			} catch (Exception e) { e.printStackTrace(); }
+			InputStreamReader isr = new InputStreamReader(fis);
+	        scanner = new Scanner(isr);
+		}
+		else {
+			scanner = new Scanner(new StringReader(s));
+		}
+		
+		try {
+			lookAhead = scanner.nextToken();
+		} catch (IOException e) {error("Scan error"); }
+	}
 	
 	/**
 	 * program id;
@@ -495,7 +524,7 @@ public class Parser {
 	}
 	
 	/**
-	 * This method 
+	 * This method matches the lexeme at the current index to the type passed in.
 	 * @param expected
 	 */
 	public void match(TokenType expected) {
