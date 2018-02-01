@@ -192,8 +192,8 @@ public class Parser {
 	}
 	
 	/**
-	 * variable assignop expression |						// Not sure how to differentiate this id
-	 * procedure_statement |								// and this id
+	 * variable assignop expression |						// Currently only this is implemented
+	 * procedure_statement |								// Utilize symbol table to implement this
 	 * compound_statement |									// if (BEGIN)
 	 * if expression then statement else statement |		// if (IF)
 	 * while expression do statement |						// if (WHILE)
@@ -495,7 +495,7 @@ public class Parser {
 	}
 	
 	/**
-	 * 
+	 * This method 
 	 * @param expected
 	 */
 	public void match(TokenType expected) {
