@@ -1,7 +1,7 @@
 package parser;
 import java.io.IOException;
-
 import scanner.*;
+
 
 /**
  * @author heechan
@@ -394,18 +394,18 @@ public class Parser {
 	 */
 	public void addop() {
 		switch (lookAhead.getType()) {
-		case PLUS:
-			match(TokenType.PLUS);
-			break;
-		case MINUS:
-			match(TokenType.MINUS);
-			break;
-		case OR:
-			match(TokenType.OR);
-			break;
-		default:
-			error("addop()");
-			break;
+			case PLUS:
+				match(TokenType.PLUS);
+				break;
+			case MINUS:
+				match(TokenType.MINUS);
+				break;
+			case OR:
+				match(TokenType.OR);
+				break;
+			default:
+				error("addop()");
+				break;
 		}
 	}
 	
@@ -429,24 +429,24 @@ public class Parser {
 	 */
 	public void mulop() {
 		switch (lookAhead.getType()) {
-		case ASTERISK:
-			match(TokenType.ASTERISK);
-			break;
-		case SLASH:
-			match(TokenType.SLASH);
-			break;
-		case DIV:
-			match(TokenType.DIV);
-			break;
-		case MOD:
-			match(TokenType.MOD);
-			break;
-		case AND:
-			match(TokenType.AND);
-			break;
-		default:
-			error("mulop()");
-			break;
+			case ASTERISK:
+				match(TokenType.ASTERISK);
+				break;
+			case SLASH:
+				match(TokenType.SLASH);
+				break;
+			case DIV:
+				match(TokenType.DIV);
+				break;
+			case MOD:
+				match(TokenType.MOD);
+				break;
+			case AND:
+				match(TokenType.AND);
+				break;
+			default:
+				error("mulop()");
+				break;
 		}
 	}
 	
@@ -470,27 +470,27 @@ public class Parser {
 	 */
 	public void relop() {
 		switch (lookAhead.getType()) {
-		case EQUAL:
-			match(TokenType.EQUAL);
-			break;
-		case NOTEQUAL:
-			match(TokenType.NOTEQUAL);
-			break;
-		case LESSTHAN:
-			match(TokenType.LESSTHAN);
-			break;
-		case LESSTHANOREQUALTO:
-			match(TokenType.LESSTHANOREQUALTO);
-			break;
-		case GREATERTHAN:
-			match(TokenType.GREATERTHAN);
-			break;
-		case GREATERTHANOREQUALTO:
-			match(TokenType.GREATERTHANOREQUALTO);
-			break;
-		default:
-			error("relop()");
-			break;
+			case EQUAL:
+				match(TokenType.EQUAL);
+				break;
+			case NOTEQUAL:
+				match(TokenType.NOTEQUAL);
+				break;
+			case LESSTHAN:
+				match(TokenType.LESSTHAN);
+				break;
+			case LESSTHANOREQUALTO:
+				match(TokenType.LESSTHANOREQUALTO);
+				break;
+			case GREATERTHAN:
+				match(TokenType.GREATERTHAN);
+				break;
+			case GREATERTHANOREQUALTO:
+				match(TokenType.GREATERTHANOREQUALTO);
+				break;
+			default:
+				error("relop()");
+				break;
 		}
 	}
 	
