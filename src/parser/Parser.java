@@ -494,6 +494,10 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param expected
+	 */
 	public void match(TokenType expected) {
 		if (this.lookAhead.getType() == expected) {
 			try {
