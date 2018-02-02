@@ -6,10 +6,20 @@ import org.junit.jupiter.api.Test;
 
 class ParserTest {
 
+	//program
+	
+	//declarations
+	
+	//subprogram_declaration
+	
+	//statement
+	
+	//simple_expression
+	
+	//factor
 	@Test
 	void testFactor() {
-		Parser parser = new Parser("43", false);
+		Parser parser = new Parser("45 ;", false);
 		parser.factor();
 	}
-
 }
