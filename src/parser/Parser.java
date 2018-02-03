@@ -64,7 +64,7 @@ public class Parser {
 	 */
 	public void identifier_list() {
 		match(TokenType.ID);
-		if (lookAhead.getType() == TokenType.COMMA) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.COMMA) {
 			match(TokenType.COMMA);
 			identifier_list();
 		}
@@ -75,7 +75,7 @@ public class Parser {
 	 * lambda
 	 */
 	public void declarations() {
-		if (lookAhead.getType() == TokenType.VAR) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.VAR) {
 			match(TokenType.VAR);
 			identifier_list();
 			match(TokenType.COLON);
@@ -90,7 +90,7 @@ public class Parser {
 	 * array [ num : num ] of standard_type
 	 */
 	public void type() {
-		if (lookAhead.getType() == TokenType.ARRAY) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.ARRAY) {
 			match(TokenType.ARRAY);
 			match(TokenType.LSQBRACKET);
 			match(TokenType.NUMBER);
@@ -107,10 +107,10 @@ public class Parser {
 	 * real
 	 */
 	public void standard_type() {
-		if (lookAhead.getType() == TokenType.INTEGER) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.INTEGER) {
 			match(TokenType.INTEGER);
 		}
-		else if (lookAhead.getType() == TokenType.REAL) {
+		else if (lookAhead != null && lookAhead.getType() == TokenType.REAL) {
 			match(TokenType.REAL);
 		}
 	}
@@ -121,7 +121,7 @@ public class Parser {
 	 * lambda
 	 */
 	public void subprogram_declarations() {
-		if (lookAhead.getType() == TokenType.FUNCTION || lookAhead.getType() == TokenType.PROCEDURE) {
+		if (lookAhead != null && (lookAhead.getType() == TokenType.FUNCTION || lookAhead.getType() == TokenType.PROCEDURE)) {
 			subprogram_declaration();
 			match(TokenType.SEMICOLON);
 			subprogram_declarations();
@@ -146,7 +146,7 @@ public class Parser {
 	 * procedure id arguments ;
 	 */
 	public void subprogram_head() {
-		if (lookAhead.getType() == TokenType.FUNCTION) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.FUNCTION) {
 			match(TokenType.FUNCTION);
 			match(TokenType.ID);
 			arguments();
@@ -154,7 +154,7 @@ public class Parser {
 			standard_type();
 			match(TokenType.SEMICOLON);
 		}
-		else if (lookAhead.getType() == TokenType.PROCEDURE) {
+		else if (lookAhead != null && lookAhead.getType() == TokenType.PROCEDURE) {
 			match(TokenType.PROCEDURE);
 			match(TokenType.ID);
 			arguments();
@@ -167,7 +167,7 @@ public class Parser {
 	 * lambda
 	 */
 	public void arguments() {
-		if (lookAhead.getType() == TokenType.LPARENTHESES) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.LPARENTHESES) {
 			match(TokenType.LPARENTHESES);
 			parameter_list();
 			match(TokenType.RPARENTHESES);
@@ -182,7 +182,7 @@ public class Parser {
 		identifier_list();
 		match(TokenType.COLON);
 		type();
-		if (lookAhead.getType() == TokenType.SEMICOLON) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.SEMICOLON) {
 			match(TokenType.SEMICOLON);
 			parameter_list();
 		}
@@ -202,8 +202,8 @@ public class Parser {
 	 * lambda
 	 */
 	public void optional_statements() {
-		if (lookAhead.getType() == TokenType.ID || lookAhead.getType() == TokenType.BEGIN ||
-				lookAhead.getType() == TokenType.IF || lookAhead.getType() == TokenType.WHILE) {
+		if (lookAhead != null && (lookAhead.getType() == TokenType.ID || lookAhead.getType() == TokenType.BEGIN ||
+				lookAhead.getType() == TokenType.IF || lookAhead.getType() == TokenType.WHILE)) {
 			statement_list();
 		}
 	}
@@ -214,7 +214,7 @@ public class Parser {
 	 */
 	public void statement_list() {
 		statement();
-		if (lookAhead.getType() == TokenType.SEMICOLON) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.SEMICOLON) {
 			match(TokenType.SEMICOLON);
 			statement_list();
 		}
@@ -230,15 +230,15 @@ public class Parser {
 	 * write ( expression )									// this hasn't been implemented
 	 */
 	public void statement() {
-		if (lookAhead.getType() == TokenType.ID) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.ID) {
 			variable();
 			match(TokenType.BECOMES);
 			expression();
 		}
-		else if (lookAhead.getType() == TokenType.BEGIN) {
+		else if (lookAhead != null && lookAhead.getType() == TokenType.BEGIN) {
 			compound_statement();
 		}
-		else if (lookAhead.getType() == TokenType.IF) {
+		else if (lookAhead != null && lookAhead.getType() == TokenType.IF) {
 			match(TokenType.IF);
 			expression();
 			match(TokenType.THEN);
@@ -246,7 +246,7 @@ public class Parser {
 			match(TokenType.ELSE);
 			statement();
 		}
-		else if (lookAhead.getType() == TokenType.WHILE) {
+		else if (lookAhead != null && lookAhead.getType() == TokenType.WHILE) {
 			match(TokenType.WHILE);
 			expression();
 			match(TokenType.DO);
@@ -260,7 +260,7 @@ public class Parser {
 	 */
 	public void variable() {
 		match(TokenType.ID);
-		if (lookAhead.getType() == TokenType.LSQBRACKET) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.LSQBRACKET) {
 			match(TokenType.LSQBRACKET);
 			expression();
 			match(TokenType.RSQBRACKET);
@@ -273,7 +273,7 @@ public class Parser {
 	 */
 	public void procedure_statement() {
 		match(TokenType.ID);
-		if (lookAhead.getType() == TokenType.LPARENTHESES) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.LPARENTHESES) {
 			match(TokenType.LPARENTHESES);
 			expression_list();
 			match(TokenType.RPARENTHESES);
@@ -286,7 +286,7 @@ public class Parser {
 	 */
 	public void expression_list() {
 		expression();
-		if (lookAhead.getType() == TokenType.COMMA) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.COMMA) {
 			match(TokenType.COMMA);
 			expression_list();
 		}
@@ -298,7 +298,7 @@ public class Parser {
 	 */
 	public void expression() {
 		simple_expression();
-		if (isRelop(lookAhead)) {
+		if (lookAhead != null && isRelop(lookAhead)) {
 			relop();
 			simple_expression();
 		}
@@ -309,7 +309,7 @@ public class Parser {
 	 * sign term simple_part
 	 */
 	public void simple_expression() {
-		if (lookAhead.getType() == TokenType.MINUS || lookAhead.getType() == TokenType.PLUS) {
+		if (lookAhead != null && (lookAhead.getType() == TokenType.MINUS || lookAhead.getType() == TokenType.PLUS)) {
 			sign();
 		}
 		term();
@@ -321,7 +321,7 @@ public class Parser {
 	 * lambda
 	 */
 	public void simple_part() {
-		if (isAddop(lookAhead)) {
+		if (lookAhead != null && isAddop(lookAhead)) {
 			addop();
 			term();
 			simple_part();
@@ -341,7 +341,7 @@ public class Parser {
 	 * lambda
 	 */
 	public void term_part() {
-		if (isMulop(lookAhead)) {
+		if (lookAhead != null && isMulop(lookAhead)) {
 			mulop();
 			factor();
 			term_part();
@@ -358,28 +358,28 @@ public class Parser {
 	 */
 	public void factor() {
 		// id
-		if (lookAhead.getType() == TokenType.ID) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.ID) {
 			match(TokenType.ID);
-			if (lookAhead.getType() == TokenType.LSQBRACKET) {
+			if (lookAhead != null && lookAhead.getType() == TokenType.LSQBRACKET) {
 				match(TokenType.LSQBRACKET);
 				expression();
 				match(TokenType.RSQBRACKET);
 			}
-			else if (lookAhead.getType() == TokenType.LPARENTHESES) {
+			else if (lookAhead != null && lookAhead.getType() == TokenType.LPARENTHESES) {
 				match(TokenType.LPARENTHESES);
 				expression_list();
 				match(TokenType.RPARENTHESES);
 			}
 		}
-		else if (lookAhead.getType() == TokenType.NUMBER) {
+		else if (lookAhead != null && lookAhead.getType() == TokenType.NUMBER) {
 			match(TokenType.NUMBER);
 		}
-		else if (lookAhead.getType() == TokenType.LPARENTHESES) {
+		else if (lookAhead != null && lookAhead.getType() == TokenType.LPARENTHESES) {
 			match(TokenType.LPARENTHESES);
 			expression();
 			match(TokenType.RPARENTHESES);
 		}
-		else if (lookAhead.getType() == TokenType.NOT) {
+		else if (lookAhead != null && lookAhead.getType() == TokenType.NOT) {
 			match(TokenType.NOT);
 			factor();
 		}
@@ -393,10 +393,10 @@ public class Parser {
 	 * -
 	 */
 	public void sign() {
-		if (lookAhead.getType() == TokenType.PLUS) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.PLUS) {
 			match(TokenType.PLUS);
 		}
-		else if (lookAhead.getType() == TokenType.MINUS) {
+		else if (lookAhead != null && lookAhead.getType() == TokenType.MINUS) {
 			match(TokenType.MINUS);
 		}
 		else {
@@ -538,9 +538,13 @@ public class Parser {
 				error("IOException from Scanner");
 			}
 		}
+        else {
+            error("Match of " + expected + " found " + this.lookAhead.getType()
+                    + " instead.");
+        }
 	}
 	
 	public void error (String message) {
-		System.out.println("Error " + message);
+		System.out.println("Error: " + message);
 	}
 }
