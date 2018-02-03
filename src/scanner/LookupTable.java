@@ -37,6 +37,7 @@ public class LookupTable extends HashMap<String, TokenType> {
 		this.put(";", TokenType.SEMICOLON);
 		this.put(",", TokenType.COMMA);
 		this.put(".", TokenType.PERIOD);
+		this.put(":", TokenType.COLON);
 		this.put("[", TokenType.LSQBRACKET);
 		this.put("]", TokenType.RSQBRACKET);
 		this.put("(", TokenType.LPARENTHESES);
