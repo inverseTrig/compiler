@@ -113,6 +113,9 @@ public class Parser {
 		else if (lookAhead != null && lookAhead.getType() == TokenType.REAL) {
 			match(TokenType.REAL);
 		}
+		else {
+			error("standard_type()");
+		}
 	}
 	
 	/**
@@ -159,6 +162,9 @@ public class Parser {
 			match(TokenType.ID);
 			arguments();
 			match(TokenType.SEMICOLON);
+		}
+		else {
+			error("subprogram_head()");
 		}
 	}
 	
@@ -251,6 +257,9 @@ public class Parser {
 			expression();
 			match(TokenType.DO);
 			statement();
+		}
+		else {
+			error("statement()");
 		}
 	}
 	
