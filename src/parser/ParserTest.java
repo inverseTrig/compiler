@@ -6,7 +6,13 @@ import org.junit.jupiter.api.Test;
 
 class ParserTest {
 
-	//program
+	/**
+	 * Testing program()
+	 * Not all tests were meant to work; the error will be shown via the error() method.
+	 * For the first case, there should be no error
+	 * For the second case, by having a COLON instead of SEMICOLON, an error should be displayed.
+	 * For the third case, having a typo for PROGRAM, an error should be displayed.
+	 */
 	@Test
 	void testProgram() {
 		System.out.println("\n------Testing program():");
@@ -27,7 +33,13 @@ class ParserTest {
 		parser.program();
 	}
 	
-	//declarations
+	/**
+	 * Testing declarations()
+	 * Not all tests were meant to work; the error will be shown via the error() method.
+	 * For the first case, there should be no error.
+	 * For the second case, by having an ID instead of a type, an error should be displayed.
+	 * For the third case, by having a SEMICOLON instead of an ID, an error should be displayed.
+	 */
 	@Test
 	void testDeclarations() {
 		System.out.println("\n------Testing declarations():");
@@ -48,7 +60,13 @@ class ParserTest {
 		parser.declarations();
 	}
 	
-	//subprogram_declaration
+	/**
+	 * Testing subprogram_declaration()
+	 * Not all tests were meant to work; the error will be shown via the error() method.
+	 * For the first case, there should be no errors.
+	 * For the second case, as we have VAR instead of PROCEDURE or FUNCTION, an error is displayed.
+	 * For the third case, as we don't have a BEGIN, an error should be displayed.
+	 */
 	@Test
 	void testSubprogramDeclaration() {
 		System.out.println("\n------Testing subprogram_declaration():");
@@ -69,7 +87,13 @@ class ParserTest {
 		parser.subprogram_declaration();
 	}
 	
-	//statement
+	/**
+	 * Testing statement()
+	 * Not all tests were meant to work; the error will be shown via the error() method.
+	 * For the first case, there should be no errors.
+	 * For the second case, there should be no errors.
+	 * For the third case, as we have an EQUAL sign rather than an ASSIGN, an error should be displayed.
+	 */
 	@Test
 	void testStatement() {
 		System.out.println("\n------Testing statement():");
@@ -90,7 +114,13 @@ class ParserTest {
 		parser.statement();
 	}
 	
-	//factor
+	/**
+	 * Testing factor()
+	 * Not all tests were meant to work; the error will be shown via the error() method.
+	 * For the first case, there should be no error displayed.
+	 * For the second case, as we have no expression within the parentheses, an error should be displayed.
+	 * For the third case, as we have a right square bracket instead of a right parentheses, an error should be displayed.
+	 */
 	@Test
 	void testFactor() {
 		System.out.println("\n------Testing factor():");
@@ -112,7 +142,13 @@ class ParserTest {
 	}
 	
 	
-	//simple_expression
+	/**
+	 * Testing simple_expression()
+	 * Not all tests were meant to work; the error will be shown via the error() method.
+	 * For the first case, there should be no error displayed.
+	 * For the second case, as we have + followed by a -, an error should be displayed.
+	 * For the third case, as we only have a +, an error should be displayed.
+	 */
 	@Test
 	void testSimpleExpression() {
 		
