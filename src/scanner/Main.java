@@ -3,13 +3,15 @@ package scanner;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
+import symboltable.Kind;
+import symboltable.SymbolTable;
+
 
 
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		/**
 		String filename = System.getProperty("user.dir") + "/input.txt";
         FileInputStream fis = null;
         try {
@@ -27,7 +29,16 @@ public class Main {
             //if( aToken != null && !aToken.equals( ""))
                 System.out.println("The token returned was " + aToken);
         } while(aToken != null);
-        
+        **/
+		
+		SymbolTable st = new SymbolTable();
+		
+		st.add("foo", Kind.PROGRAM);
+		st.add("fum", Kind.FUNCTION);
+		
+		System.out.println(st.getKind("foo"));
+		
+		System.out.println(st.toString());
 	}
 
 }
