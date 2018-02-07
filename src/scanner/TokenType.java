@@ -1,7 +1,6 @@
 package scanner;
 
 /**
- * @author heechan
  * Defining the ENUMs of TokenType that we will be using when creating Tokens.
  * These ENUMs will also be used in the LookupTable to pair with the appropriate lexeme.
  */
