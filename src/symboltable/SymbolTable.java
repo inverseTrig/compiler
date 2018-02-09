@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class SymbolTable {
-	private HashMap<String, DataStorage> symbolTable;
+	private HashMap<String, DataStorage> global;
 	
 	/**
 	 * Constructor for SymbolTable - our SymbolTable will take in a String lexeme and a DataStorage, which is explained below.
 	 */
 	public SymbolTable() {
-		symbolTable = new HashMap<String, DataStorage>();
+		global = new HashMap<String, DataStorage>();
 	}
 	
 	/**
@@ -19,7 +19,7 @@ public class SymbolTable {
 	 * @param kind
 	 */
 	public void add(String lexeme, Kind kind) {
-		this.symbolTable.put(lexeme, new DataStorage(lexeme, kind));
+		this.global.put(lexeme, new DataStorage(lexeme, kind));
 	}
 	
 	/**
@@ -28,7 +28,7 @@ public class SymbolTable {
 	 * @return
 	 */
 	public Kind getKind(String lexeme) {
-		return this.symbolTable.get(lexeme).getKind();
+		return this.global.get(lexeme).getKind();
 	}
 	
 	/**
@@ -56,7 +56,7 @@ public class SymbolTable {
 	@Override
 	public String toString() {
 		String s = "";
-		for (Entry<String, DataStorage> entry: this.symbolTable.entrySet()) {
+		for (Entry<String, DataStorage> entry: this.global.entrySet()) {
 			s += entry.getKey() + "\t" + entry.getValue().getKind() + "\n";
 		}
 		return s;

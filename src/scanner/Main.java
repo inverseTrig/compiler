@@ -38,7 +38,7 @@ public class Main {
 		
 		System.out.println(st.getKind("foo"));
 		
-		System.out.println(st.toString());
+		System.out.println("\n" + st.toString());
 	}
 
 }
