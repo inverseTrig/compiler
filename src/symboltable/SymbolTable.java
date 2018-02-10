@@ -28,7 +28,8 @@ public class SymbolTable {
 	 * @return
 	 */
 	public Kind getKind(String lexeme) {
-		return this.global.get(lexeme).getKind();
+		if (this.global.containsKey(lexeme)) return this.global.get(lexeme).getKind();
+		return null;
 	}
 	
 	/**

@@ -36,7 +36,7 @@ public class Main {
 		st.add("foo", Kind.PROGRAM);
 		st.add("fum", Kind.FUNCTION);
 		
-		System.out.println(st.getKind("foo"));
+		System.out.println(st.getKind("foobar"));
 		
 		System.out.println("\n" + st.toString());
 	}
