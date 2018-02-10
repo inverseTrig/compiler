@@ -16,6 +16,11 @@ This project is for Programming Languages and Compilers course, keystone for Com
 - Parser.java - contains a parser for Pascal based on the grammar provided by our professor. On top of abiding the rules of the grammar, there are six other methods, isMulop(), mulop(), isAddop(), addop(), isRelop(), and relop() for the sake of readability and simplifying the code.
 - ParserTest.java - JUnit testing for six main methods of the Parser; namely program(), declarations(), subprogram_declaration(), statement(), simple_expression(), and factor().
 
+#### /src/symboltable/
+- SymbolTable.java – contains constructor for our symbol table implemented using a HashMap that holds lexeme as a key and an object called DataStructure that holds a lexeme and the kind of the ID that we would like to store.
+- Kind.java – This class is an ENUM that contains all the types of ID that we will be storing.
+- SymbolTableTest.java – contains JUnit testing cases for SymbolTable.add(lexeme, DataStorage) and SymbolTable.getKind().
+
 The [Software Design Document](https://github.com/inverseTrig/compiler/blob/master/documentation/SDD.pdf) can be found in /documentation/
 
 The code is for educational purposes only.
