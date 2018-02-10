@@ -41,11 +41,23 @@ public class SymbolTable {
 		private String lexeme;
 		private Kind kind;
 		
+		/**
+		 * Constructor for our DataStorage - this holds lexeme and kind.
+		 * @param lexeme
+		 * @param kind
+		 */
 		private DataStorage(String lexeme, Kind kind) {
 			this.lexeme = lexeme;
 			this.kind = kind;
 		}
 		
+		/**
+		 * This API call is for getKind to use.
+		 * If getKind() is not implemented in SymbolTable, we would have to be calling something like:
+		 * st.getValue(lexeme).getKind(); 
+		 * this would be a lengthy function call and this method would have to be public as well.
+		 * @return
+		 */
 		private Kind getKind() {
 			return this.kind;
 		}

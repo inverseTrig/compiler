@@ -9,6 +9,10 @@ import scanner.TokenType;
 
 class SymbolTableTest {
 
+	/**
+	 * Testing adding a procedure name into our SymbolTable.
+	 * Here, we can see that the returned kind is what we expected it to be.
+	 */
 	@Test
 	void testGetKindA() {
 		SymbolTable st = new SymbolTable();
@@ -19,6 +23,10 @@ class SymbolTableTest {
 		assertEquals(expectedKind, returnedKind);
 	}
 	
+	/**
+	 * Testing adding two different things into our SymbolTable
+	 * and seeing if the returned kind that we are looking for matches what we entered.
+	 */
 	@Test
 	void testGetKindB() {
 		SymbolTable st = new SymbolTable();
@@ -30,6 +38,10 @@ class SymbolTableTest {
 		assertEquals(expectedKind, returnedKind);
 	}
 	
+	/**
+	 * Here, we see that "foobar" is not inside our SymbolTable.
+	 * As it is not in our SymbolTable, it should return null, and we see that this works as intended as well.
+	 */
 	@Test
 	void testGetKindC() {
 		SymbolTable st = new SymbolTable();
