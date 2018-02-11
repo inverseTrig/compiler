@@ -8,5 +8,6 @@ public enum Kind {
 	PROGRAM,
 	VARIABLE,
 	FUNCTION,
-	PROCEDURE,
+	PROCEDURE, //Not sure if this one is included.
+	ARRAY,
 }

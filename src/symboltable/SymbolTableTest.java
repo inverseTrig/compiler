@@ -16,8 +16,8 @@ class SymbolTableTest {
 	@Test
 	void testGetKindA() {
 		SymbolTable st = new SymbolTable();
-		st.add("foo", Kind.PROCEDURE);
-		Kind expectedKind = Kind.PROCEDURE;
+		st.add("foo", Kind.PROGRAM);
+		Kind expectedKind = Kind.PROGRAM;
 		
 		Kind returnedKind = st.getKind("foo");
 		assertEquals(expectedKind, returnedKind);
@@ -30,9 +30,9 @@ class SymbolTableTest {
 	@Test
 	void testGetKindB() {
 		SymbolTable st = new SymbolTable();
-		st.add("foo", Kind.PROCEDURE);
-		st.add("bar", Kind.FUNCTION);
-		Kind expectedKind = Kind.FUNCTION;
+		st.add("foo", Kind.PROGRAM);
+		st.add("bar", Kind.VARIABLE);
+		Kind expectedKind = Kind.VARIABLE;
 		
 		Kind returnedKind = st.getKind("bar");
 		assertEquals(expectedKind, returnedKind);
@@ -45,12 +45,39 @@ class SymbolTableTest {
 	@Test
 	void testGetKindC() {
 		SymbolTable st = new SymbolTable();
-		st.add("foo", Kind.PROCEDURE);
-		st.add("bar", Kind.FUNCTION);
+		st.add("foo", Kind.PROGRAM);
+		st.add("bar", Kind.VARIABLE);
 		Kind expectedKind = null;
 		
 		Kind returnedKind = st.getKind("foobar");
 		assertEquals(expectedKind, returnedKind);
 	}
+	
+	/**
+	 * Testing to see if the boolean returned is false (this is correct)
+	 * We can see that this methods works as intended.
+	 */
+	@Test
+	void testIsKindA() { 
+		SymbolTable st = new SymbolTable();
+		st.add("foo", Kind.VARIABLE);;
+		boolean expectedBoolean = false;
+		
+		boolean returnedBoolean = st.isKind("foo", Kind.PROGRAM);
+		assertEquals(expectedBoolean, returnedBoolean);
+	}
 
+	/**
+	 * Testing to see if the boolean returned is true (this is correct)
+	 * We can see, again, that this method works as intended.
+	 */
+	@Test
+	void testIsKindB() { 
+		SymbolTable st = new SymbolTable();
+		st.add("foo", Kind.PROGRAM);;
+		boolean expectedBoolean = true;
+		
+		boolean returnedBoolean = st.isKind("foo", Kind.PROGRAM);
+		assertEquals(expectedBoolean, returnedBoolean);
+	}
 }

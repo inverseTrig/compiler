@@ -33,6 +33,20 @@ public class SymbolTable {
 	}
 	
 	/**
+	 * Returns boolean if the lexeme passed in is the kind requested.
+	 * Returns true if it is, and false otherwise.
+	 * @param lexeme
+	 * @param kind
+	 * @return
+	 */
+	public boolean isKind(String lexeme, Kind kind) {
+		if (this.getKind(lexeme) == kind) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * DataStorage is an object we create to put inside our HashMap.
 	 * DataStorage contains String lexeme, which is identical to the lexeme used as key value in the SymbolTable.
 	 * Kind is defined as an ENUM, which can be a PROGRAM, VARIABLE, FUNCTION, OR A PROCEDURE.
