@@ -1,10 +1,16 @@
 package parser;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.StringReader;
 
 import scanner.*;
+import symboltable.Kind;
+import symboltable.SymbolTable;
 
 
 /**
@@ -15,14 +21,17 @@ public class Parser {
 	
 	private Token lookAhead;
 	private Scanner scanner;
+	private SymbolTable symTab;
 	
 	/**
 	 * Constructor for the Parser. Here, we pass in a string and a boolean.
 	 * The boolean indicates if the string is a file name or a string.
 	 * @param s String that is passed in.
 	 * @param isFile boolean that indicates if the String is a file name or not.
+	 * @throws IOException 
 	 */
 	public Parser(String s, boolean isFile) {
+		symTab = new SymbolTable();
 		if (isFile) {
 			String filename = System.getProperty("user.dir") + "/" + s + ".txt";
 			FileInputStream fis = null;
@@ -50,12 +59,22 @@ public class Parser {
 	 */
 	public void program() {
 		match(TokenType.PROGRAM);
+		this.symTab.add(lookAhead.getLexeme(), Kind.PROGRAM);
 		match(TokenType.ID);
 		match(TokenType.SEMICOLON);
 		declarations();
 		subprogram_declarations();
 		compound_statement();
 		match(TokenType.PERIOD);
+		
+		PrintWriter write;
+		try {
+			write = new PrintWriter(new BufferedWriter (new FileWriter(System.getProperty("user.dir") + "/" + "output.symboltable")));
+			write.println(this.symTab.toString());
+			write.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -63,6 +82,8 @@ public class Parser {
 	 * id , idenfitier_list
 	 */
 	public void identifier_list() {
+		this.symTab.add(lookAhead.getLexeme(), Kind.VARIABLE);
+		this.symTab.toString();
 		match(TokenType.ID);
 		if (lookAhead != null && lookAhead.getType() == TokenType.COMMA) {
 			match(TokenType.COMMA);
@@ -151,6 +172,7 @@ public class Parser {
 	public void subprogram_head() {
 		if (lookAhead != null && lookAhead.getType() == TokenType.FUNCTION) {
 			match(TokenType.FUNCTION);
+			this.symTab.add(lookAhead.getLexeme(), Kind.FUNCTION);
 			match(TokenType.ID);
 			arguments();
 			match(TokenType.COLON);
@@ -159,6 +181,7 @@ public class Parser {
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.PROCEDURE) {
 			match(TokenType.PROCEDURE);
+			this.symTab.add(lookAhead.getLexeme(), Kind.PROCEDURE);
 			match(TokenType.ID);
 			arguments();
 			match(TokenType.SEMICOLON);
@@ -227,8 +250,8 @@ public class Parser {
 	}
 	
 	/**
-	 * variable assignop expression |						// Currently only this is implemented
-	 * procedure_statement |								// Utilize symbol table to implement this
+	 * variable assignop expression |						// if kind.variable
+	 * procedure_statement |								// if kind.procedure
 	 * compound_statement |									// if (BEGIN)
 	 * if expression then statement else statement |		// if (IF)
 	 * while expression do statement |						// if (WHILE)
@@ -236,10 +259,13 @@ public class Parser {
 	 * write ( expression )									// this hasn't been implemented
 	 */
 	public void statement() {
-		if (lookAhead != null && lookAhead.getType() == TokenType.ID) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.ID && this.symTab.isKind(lookAhead.getLexeme(), Kind.VARIABLE)) {
 			variable();
 			match(TokenType.BECOMES);
 			expression();
+		}
+		else if (lookAhead != null && lookAhead.getType() == TokenType.ID && this.symTab.isKind(lookAhead.getLexeme(), Kind.PROCEDURE)) {
+			procedure_statement();
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.BEGIN) {
 			compound_statement();
@@ -556,4 +582,5 @@ public class Parser {
 	public void error (String message) {
 		System.out.println("Error: " + message);
 	}
+	
 }

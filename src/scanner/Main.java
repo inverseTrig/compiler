@@ -1,10 +1,7 @@
 package scanner;
 
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 
-import symboltable.Kind;
-import symboltable.SymbolTable;
+import parser.Parser;
 
 
 
@@ -31,14 +28,9 @@ public class Main {
         } while(aToken != null);
         **/
 		
-		SymbolTable st = new SymbolTable();
+		Parser parser = new Parser("input", true);
+		parser.program();
 		
-		st.add("foo", Kind.PROGRAM);
-		st.add("fum", Kind.FUNCTION);
-		
-		System.out.println(st.getKind("foobar"));
-		
-		System.out.println("\n" + st.toString());
 	}
 
 }

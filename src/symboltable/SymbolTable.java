@@ -82,7 +82,7 @@ public class SymbolTable {
 	 */
 	@Override
 	public String toString() {
-		String s = "";
+		String s = "Key\tEntry\n----------------\n";
 		for (Entry<String, DataStorage> entry: this.global.entrySet()) {
 			s += entry.getKey() + "\t" + entry.getValue().getKind() + "\n";
 		}
