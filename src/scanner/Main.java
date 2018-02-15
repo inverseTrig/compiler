@@ -30,6 +30,7 @@ public class Main {
 		
 		Parser parser = new Parser("input", true);
 		parser.program();
+		parser.writeOut("output");
 		
 	}
 

@@ -1,7 +1,6 @@
 package parser;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -66,15 +65,6 @@ public class Parser {
 		subprogram_declarations();
 		compound_statement();
 		match(TokenType.PERIOD);
-		
-		PrintWriter write;
-		try {
-			write = new PrintWriter(new BufferedWriter (new FileWriter(System.getProperty("user.dir") + "/" + "output.symboltable")));
-			write.println(this.symTab.toString());
-			write.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -581,6 +571,17 @@ public class Parser {
 	
 	public void error (String message) {
 		System.out.println("Error: " + message);
+	}
+	
+	public void writeOut(String s) {
+		PrintWriter write;
+		try {
+			write = new PrintWriter(new BufferedWriter (new FileWriter(System.getProperty("user.dir") + "/" + s + ".symboltable")));
+			write.println(this.symTab.toString());
+			write.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
