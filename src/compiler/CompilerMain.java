@@ -1,37 +1,20 @@
-package scanner;
-
+package compiler;
 
 import parser.Parser;
 
-
-
-public class Main {
+public class CompilerMain {
 
 	public static void main(String[] args) {
-		/**
-		String filename = System.getProperty("user.dir") + "/input.txt";
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(filename);
-        } catch (Exception e) { e.printStackTrace(); }
-        InputStreamReader isr = new InputStreamReader(fis);
-        Scanner scanner = new Scanner(isr);
-        Token aToken = null;
-        do
-        {
-            try {
-                aToken = scanner.nextToken();
-            }
-            catch( Exception e) { e.printStackTrace();}
-            //if( aToken != null && !aToken.equals( ""))
-                System.out.println("The token returned was " + aToken);
-        } while(aToken != null);
-        **/
 		
-		Parser parser = new Parser("input", true);
-		parser.program();
-		parser.writeOut("output");
+		String filename = "test";						// This would mean a file test.pas needs to exist in the directory of the project.	
+		Parser parser;
+		
+		try {		
+			parser = new Parser(filename, true); 		// Initialize the parser using the constructor.
+			parser.program();							// Call program() on the parser. This will use recursion to go through the pascal file.
+			parser.writeOut(filename);					// This would print out a test.symboltable file to the directory of the project.
+			System.out.println("There were no issues.");
+		} catch (Exception e) { e.printStackTrace(); }
 		
 	}
-
 }

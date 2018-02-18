@@ -32,7 +32,7 @@ public class Parser {
 	public Parser(String s, boolean isFile) {
 		symTab = new SymbolTable();
 		if (isFile) {
-			String filename = System.getProperty("user.dir") + "/" + s + ".txt";
+			String filename = System.getProperty("user.dir") + "/" + s + ".pas";
 			FileInputStream fis = null;
 			try {
 				fis = new FileInputStream(filename);
@@ -569,10 +569,19 @@ public class Parser {
         }
 	}
 	
+	/**
+	 * This method is used in the methods above to print out an error message when something illegal happens.
+	 * (Illegal in the sense that the grammar is incorrect)
+	 * @param message
+	 */
 	public void error (String message) {
 		System.out.println("Error: " + message);
 	}
 	
+	/**
+	 * This method prints out a .symboltable file into the directory of the project.
+	 * @param s
+	 */
 	public void writeOut(String s) {
 		PrintWriter write;
 		try {
