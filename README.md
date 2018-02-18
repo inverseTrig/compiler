@@ -21,6 +21,9 @@ This project is for Programming Languages and Compilers course, keystone for Com
 - Kind.java – This class is an ENUM that contains all the types of ID that we will be storing.
 - SymbolTableTest.java – contains JUnit testing cases for SymbolTable.add(lexeme, DataStorage) and SymbolTable.getKind().
 
+#### /src/compiler/
+- CompilerMain.java - Contains the main for the compiler; primarily, as of now, to test the integration of the SymbolTable to the parser.
+
 The [Software Design Document](https://github.com/inverseTrig/compiler/blob/master/documentation/SDD.pdf) can be found in /documentation/
 
 The code is for educational purposes only.
