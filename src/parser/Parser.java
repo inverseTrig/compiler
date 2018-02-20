@@ -593,4 +593,12 @@ public class Parser {
 		}
 	}
 	
+	/**
+	 * This method returns the symbol table of the parser; this method is used in the JUnit test.
+	 * @return SymbolTable of the parser
+	 */
+	public SymbolTable getSymbolTable() {
+		return this.symTab;
+	}
+	
 }
