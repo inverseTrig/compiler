@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 /**
- * Contains the main for the compiler; primarily, as of now, to test the integration of the SymbolTable to the parser.
+ * Contains the main for the compiler; primarily to test the integration of the SymbolTable to the parser.
  * @author heechan
  *
  */
