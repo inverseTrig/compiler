@@ -1,6 +1,5 @@
 program test;
-var
-   num, f : integer;
+var num, f : integer;
    
 procedure fum(fi : integer);
 begin
