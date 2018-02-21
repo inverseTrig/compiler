@@ -2,6 +2,11 @@ package compiler;
 
 import parser.Parser;
 
+/**
+ * Main class to test reading in the file, parsing it, and then finally printing out a .symboltable file.
+ * @author heechan
+ *
+ */
 public class CompilerMain {
 
 	public static void main(String[] args) {
