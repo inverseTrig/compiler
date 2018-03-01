@@ -249,13 +249,18 @@ public class Parser {
 	 * write ( expression )									// this hasn't been implemented
 	 */
 	public void statement() {
-		if (lookAhead != null && lookAhead.getType() == TokenType.ID && this.symTab.isKind(lookAhead.getLexeme(), Kind.VARIABLE)) {
-			variable();
-			match(TokenType.BECOMES);
-			expression();
-		}
-		else if (lookAhead != null && lookAhead.getType() == TokenType.ID && this.symTab.isKind(lookAhead.getLexeme(), Kind.PROCEDURE)) {
-			procedure_statement();
+		if (lookAhead != null && lookAhead.getType() == TokenType.ID) {
+			if (this.symTab.isKind(lookAhead.getLexeme(), Kind.VARIABLE)) {
+				variable();
+				match(TokenType.BECOMES);
+				expression();
+			}
+			else if (this.symTab.isKind(lookAhead.getLexeme(), Kind.PROCEDURE)) {
+				procedure_statement();
+			}
+			else {
+				error("statement().VARorPROC");
+			}
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.BEGIN) {
 			compound_statement();
