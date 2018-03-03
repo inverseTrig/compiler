@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 
 import scanner.*;
+import syntaxtree.*;
 import symboltable.Kind;
 import symboltable.SymbolTable;
 
@@ -32,10 +33,9 @@ public class Parser {
 	public Parser(String s, boolean isFile) {
 		symTab = new SymbolTable();
 		if (isFile) {
-			String filename = System.getProperty("user.dir") + "/" + s + ".pas";
 			FileInputStream fis = null;
 			try {
-				fis = new FileInputStream(filename);
+				fis = new FileInputStream(s);
 			} catch (Exception e) { e.printStackTrace(); }
 			InputStreamReader isr = new InputStreamReader(fis);
 	        scanner = new Scanner(isr);
@@ -56,15 +56,20 @@ public class Parser {
 	 * compound_statement
 	 * .
 	 */
-	public void program() {
+	public ProgramNode program() {		
 		match(TokenType.PROGRAM);
+		
+		ProgramNode pNode = new ProgramNode(lookAhead.getLexeme());
+		
 		this.symTab.add(lookAhead.getLexeme(), Kind.PROGRAM);
 		match(TokenType.ID);
 		match(TokenType.SEMICOLON);
-		declarations();
-		subprogram_declarations();
-		compound_statement();
+		pNode.setVariables(declarations());
+		pNode.setFunctions(subprogram_declarations());
+		pNode.setMain(compound_statement());
 		match(TokenType.PERIOD);
+		
+		return pNode;
 	}
 	
 	/**
@@ -85,7 +90,9 @@ public class Parser {
 	 * var identifier_list : type ; declarations |
 	 * lambda
 	 */
-	public void declarations() {
+	public DeclarationsNode declarations() {
+		DeclarationsNode decNode = new DeclarationsNode();
+		
 		if (lookAhead != null && lookAhead.getType() == TokenType.VAR) {
 			match(TokenType.VAR);
 			identifier_list();
@@ -94,6 +101,8 @@ public class Parser {
 			match(TokenType.SEMICOLON);
 			declarations();
 		}
+		
+		return decNode;
 	}
 	
 	/**
@@ -134,12 +143,16 @@ public class Parser {
 	 * subprogram_declarations |
 	 * lambda
 	 */
-	public void subprogram_declarations() {
+	public SubProgramDeclarationsNode subprogram_declarations() {
+		SubProgramDeclarationsNode subProgDecNode = new SubProgramDeclarationsNode();
+		
 		if (lookAhead != null && (lookAhead.getType() == TokenType.FUNCTION || lookAhead.getType() == TokenType.PROCEDURE)) {
 			subprogram_declaration();
 			match(TokenType.SEMICOLON);
 			subprogram_declarations();
 		}
+		
+		return subProgDecNode;
 	}
 	
 	/**
@@ -210,10 +223,14 @@ public class Parser {
 	/**
 	 * begin optional_statements end
 	 */
-	public void compound_statement() {
+	public CompoundStatementNode compound_statement() {
+		CompoundStatementNode compStatNode = new CompoundStatementNode();
+		
 		match(TokenType.BEGIN);
 		optional_statements();
 		match(TokenType.END);
+		
+		return compStatNode;
 	}
 	
 	/**
@@ -590,7 +607,7 @@ public class Parser {
 	public void writeOut(String s) {
 		PrintWriter write;
 		try {
-			write = new PrintWriter(new BufferedWriter (new FileWriter(System.getProperty("user.dir") + "/" + s + ".symboltable")));
+			write = new PrintWriter(new BufferedWriter (new FileWriter(s.substring(0, s.length() - 4) + ".symboltable")));
 			write.println(this.symTab.toString());
 			write.close();
 		} catch (IOException e) {
