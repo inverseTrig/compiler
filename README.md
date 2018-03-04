@@ -16,11 +16,15 @@ This project is for Programming Languages and Compilers course, keystone for Com
 - Parser.java - contains a parser for Pascal based on the grammar provided by our professor. On top of abiding the rules of the grammar, there are six other methods, isMulop(), mulop(), isAddop(), addop(), isRelop(), and relop() for the sake of readability and simplifying the code.
 - ParserTest.java - JUnit testing for six main methods of the Parser; namely program(), declarations(), subprogram_declaration(), statement(), simple_expression(), and factor().
 - SymbolTableIntegrationTest.java - JUnit testing for statement() after integrating SymbolTable to the Parser.
+- SyntaxTreeTest.java - JUnit testing for the integration of SyntaxTree to the parser.
 
 #### /src/symboltable/
 - SymbolTable.java – contains constructor for our symbol table implemented using a HashMap that holds lexeme as a key and an object called DataStructure that holds a lexeme and the kind of the ID that we would like to store.
 - Kind.java – This class is an ENUM that contains all the types of ID that we will be storing.
 - SymbolTableTest.java – contains JUnit testing cases for SymbolTable.add(lexeme, DataStorage) and SymbolTable.getKind().
+
+#### /src/syntaxtree/
+- This package contains the code for our syntax tree provided by our professor, Erik Steinmetz. Each node will contain essential information of the code, which will be used to create a .symboltable file with neatly indented contents.
 
 #### /src/compiler/
 - CompilerMain.java - Contains the main for the compiler; primarily, as of now, to test the integration of the SymbolTable to the parser.
