@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 import scanner.*;
 import syntaxtree.*;
@@ -64,8 +65,8 @@ public class Parser {
 		this.symTab.add(lookAhead.getLexeme(), Kind.PROGRAM);
 		match(TokenType.ID);
 		match(TokenType.SEMICOLON);
-		pNode.setVariables(declarations());
-		pNode.setFunctions(subprogram_declarations());
+		pNode.setVariables(declarations(new DeclarationsNode()));
+		pNode.setFunctions(subprogram_declarations(new SubProgramDeclarationsNode()));
 		pNode.setMain(compound_statement());
 		match(TokenType.PERIOD);
 		
@@ -76,30 +77,37 @@ public class Parser {
 	 * id |
 	 * id , idenfitier_list
 	 */
-	public void identifier_list() {
+	public ArrayList<VariableNode> identifier_list(ArrayList<VariableNode> vNodes) {
+		vNodes.add(new VariableNode(lookAhead.getLexeme()));
 		this.symTab.add(lookAhead.getLexeme(), Kind.VARIABLE);
-		this.symTab.toString();
+		
 		match(TokenType.ID);
 		if (lookAhead != null && lookAhead.getType() == TokenType.COMMA) {
 			match(TokenType.COMMA);
-			identifier_list();
+			vNodes = identifier_list(vNodes);
 		}
+		
+		return vNodes;
 	}
 	
 	/**
 	 * var identifier_list : type ; declarations |
 	 * lambda
 	 */
-	public DeclarationsNode declarations() {
-		DeclarationsNode decNode = new DeclarationsNode();
+	public DeclarationsNode declarations(DeclarationsNode decNode) {
+		ArrayList<VariableNode> vNodes = new ArrayList<>();
 		
 		if (lookAhead != null && lookAhead.getType() == TokenType.VAR) {
 			match(TokenType.VAR);
-			identifier_list();
+			vNodes = identifier_list(new ArrayList<VariableNode>());
 			match(TokenType.COLON);
 			type();
 			match(TokenType.SEMICOLON);
-			declarations();
+			decNode = declarations(decNode);
+		}
+		
+		for (VariableNode vN : vNodes) {
+			decNode.addVariable(vN);
 		}
 		
 		return decNode;
@@ -143,13 +151,12 @@ public class Parser {
 	 * subprogram_declarations |
 	 * lambda
 	 */
-	public SubProgramDeclarationsNode subprogram_declarations() {
-		SubProgramDeclarationsNode subProgDecNode = new SubProgramDeclarationsNode();
+	public SubProgramDeclarationsNode subprogram_declarations(SubProgramDeclarationsNode subProgDecNode) {
 		
 		if (lookAhead != null && (lookAhead.getType() == TokenType.FUNCTION || lookAhead.getType() == TokenType.PROCEDURE)) {
-			subprogram_declaration();
+			subProgDecNode.addSubProgramDeclaration(subprogram_declaration());
 			match(TokenType.SEMICOLON);
-			subprogram_declarations();
+			subProgDecNode = subprogram_declarations(subProgDecNode);
 		}
 		
 		return subProgDecNode;
@@ -161,63 +168,95 @@ public class Parser {
 	 * subprogram_declarations
 	 * compound_statement
 	 */
-	public void subprogram_declaration() {
-		subprogram_head();
-		declarations();
-		subprogram_declarations();
-		compound_statement();
+	public SubProgramNode subprogram_declaration() {
+		SubProgramNode subProgNode = subprogram_head();
+		subProgNode.setVariables(declarations(new DeclarationsNode()));
+		subProgNode.setFunctions(subprogram_declarations(new SubProgramDeclarationsNode()));
+		subProgNode.setMain(compound_statement());
+		
+		return subProgNode;
 	}
 	
 	/**
 	 * function id arguments : standard_type ; |
 	 * procedure id arguments ;
 	 */
-	public void subprogram_head() {
+	public SubProgramNode subprogram_head() {
+		SubProgramNode subProgNode = null;
+		
 		if (lookAhead != null && lookAhead.getType() == TokenType.FUNCTION) {
 			match(TokenType.FUNCTION);
+			subProgNode = new SubProgramNode(lookAhead.getLexeme());
 			this.symTab.add(lookAhead.getLexeme(), Kind.FUNCTION);
 			match(TokenType.ID);
-			arguments();
+			
+			ArrayList<VariableNode> vNodes = arguments(new ArrayList<VariableNode>());
+			DeclarationsNode decNode = new DeclarationsNode();
+			for (VariableNode vN : vNodes) {
+				decNode.addVariable(vN);
+			}
+			subProgNode.setParameters((decNode));
+			
 			match(TokenType.COLON);
 			standard_type();
 			match(TokenType.SEMICOLON);
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.PROCEDURE) {
 			match(TokenType.PROCEDURE);
+			subProgNode = new SubProgramNode(lookAhead.getLexeme());
+			subProgNode.setType(SubProgramType.PROCEDURE);
 			this.symTab.add(lookAhead.getLexeme(), Kind.PROCEDURE);
 			match(TokenType.ID);
-			arguments();
+			ArrayList<VariableNode> vNodes = arguments(new ArrayList<VariableNode>());
+			DeclarationsNode decNode = new DeclarationsNode();
+			for (VariableNode vN : vNodes) {
+				decNode.addVariable(vN);
+			}
+			subProgNode.setParameters(decNode);
+			System.out.println(subProgNode.indentedToString(0));
+			
 			match(TokenType.SEMICOLON);
 		}
 		else {
 			error("subprogram_head()");
 		}
+		
+		return subProgNode;
 	}
 	
 	/**
 	 * ( parameter_list ) |
 	 * lambda
 	 */
-	public void arguments() {
+	public ArrayList<VariableNode> arguments(ArrayList<VariableNode> vNodes) {
+		
 		if (lookAhead != null && lookAhead.getType() == TokenType.LPARENTHESES) {
 			match(TokenType.LPARENTHESES);
-			parameter_list();
+			vNodes = parameter_list(vNodes);
 			match(TokenType.RPARENTHESES);
 		}
+		
+		return vNodes;
 	}
 	
 	/**
 	 * identifier_list : type |
 	 * idenfiter_list : type ; parameter_list
 	 */
-	public void parameter_list() {
-		identifier_list();
+	public ArrayList<VariableNode> parameter_list(ArrayList<VariableNode> vNodes) {
+		ArrayList<VariableNode> vNode = identifier_list(new ArrayList<VariableNode>());
 		match(TokenType.COLON);
 		type();
 		if (lookAhead != null && lookAhead.getType() == TokenType.SEMICOLON) {
 			match(TokenType.SEMICOLON);
-			parameter_list();
+			vNode = parameter_list(vNode);
 		}
+		
+		for (VariableNode vN : vNode) {
+			vNodes.add(vN);
+		}
+		
+		return vNodes;
 	}
 	
 	/**

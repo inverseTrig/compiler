@@ -14,7 +14,7 @@ public class ProgramNode extends SyntaxTreeNode {
     private CompoundStatementNode main;
     
     public ProgramNode( String aName) {
-        this.name = aName;
+        this.setName(aName);
     }
 
     public DeclarationsNode getVariables() {
@@ -49,10 +49,18 @@ public class ProgramNode extends SyntaxTreeNode {
     @Override
     public String indentedToString( int level) {
         String answer = this.indentation( level);
-        answer += "Program: " + name + "\n";
+        answer += "Program: " + getName() + "\n";
         answer += variables.indentedToString( level + 1);
         answer += functions.indentedToString( level + 1);
         answer += main.indentedToString( level + 1);
         return answer;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

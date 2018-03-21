@@ -2,8 +2,10 @@ package syntaxtree;
 
 /**
  * General representation of any expression.
- * @author erik
+ * @author heechan
  */
+
 public abstract class ExpressionNode extends SyntaxTreeNode {
-    
+	public DataType dType;
+	
 }

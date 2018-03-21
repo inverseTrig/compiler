@@ -1,9 +1,10 @@
 program test;
-var num, f : integer;
+var num, f, fi : integer;
    
-procedure fum(fi : integer);
+procedure fum ( foo : integer);
+var merp, derp : real;
 begin
-	fi := fi + 3
+	foo := foo + 3
 end ;
 
 
