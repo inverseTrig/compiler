@@ -4,12 +4,11 @@ var num, f, fi : integer;
 procedure fum ( foo : integer);
 var merp, derp : real;
 begin
-	foo := foo + 3
+	foo := 5 * 3 * 6 * 7
 end ;
 
 
 begin
-   fum (num);
-   f := 3 - 2
+   f := 3
 end
 .

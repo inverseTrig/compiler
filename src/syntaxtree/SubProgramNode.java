@@ -3,13 +3,13 @@ package syntaxtree;
 public class SubProgramNode extends ProgramNode {
 	
 	SubProgramType type;
-	private DeclarationsNode parameters;
+	private ParameterStatementNode parameters;
 
-	public DeclarationsNode getParameters() {
+	public ParameterStatementNode getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(DeclarationsNode parameters) {
+	public void setParameters(ParameterStatementNode parameters) {
 		this.parameters = parameters;
 	}
 

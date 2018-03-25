@@ -191,11 +191,11 @@ public class Parser {
 			match(TokenType.ID);
 			
 			ArrayList<VariableNode> vNodes = arguments(new ArrayList<VariableNode>());
-			DeclarationsNode decNode = new DeclarationsNode();
+			ParameterStatementNode paramNode = new ParameterStatementNode();
 			for (VariableNode vN : vNodes) {
-				decNode.addVariable(vN);
+				paramNode.addVariable(vN);
 			}
-			subProgNode.setParameters((decNode));
+			subProgNode.setParameters((paramNode));
 			
 			match(TokenType.COLON);
 			standard_type();
@@ -208,11 +208,11 @@ public class Parser {
 			this.symTab.add(lookAhead.getLexeme(), Kind.PROCEDURE);
 			match(TokenType.ID);
 			ArrayList<VariableNode> vNodes = arguments(new ArrayList<VariableNode>());
-			DeclarationsNode decNode = new DeclarationsNode();
+			ParameterStatementNode paramNode = new ParameterStatementNode();
 			for (VariableNode vN : vNodes) {
-				decNode.addVariable(vN);
+				paramNode.addVariable(vN);
 			}
-			subProgNode.setParameters(decNode);
+			subProgNode.setParameters(paramNode);
 			System.out.println(subProgNode.indentedToString(0));
 			
 			match(TokenType.SEMICOLON);
@@ -266,7 +266,7 @@ public class Parser {
 		CompoundStatementNode compStatNode = new CompoundStatementNode();
 		
 		match(TokenType.BEGIN);
-		optional_statements();
+		compStatNode = optional_statements(compStatNode);
 		match(TokenType.END);
 		
 		return compStatNode;
@@ -276,23 +276,26 @@ public class Parser {
 	 * statement_list |
 	 * lambda
 	 */
-	public void optional_statements() {
+	public CompoundStatementNode optional_statements(CompoundStatementNode compStatNode) {
 		if (lookAhead != null && (lookAhead.getType() == TokenType.ID || lookAhead.getType() == TokenType.BEGIN ||
 				lookAhead.getType() == TokenType.IF || lookAhead.getType() == TokenType.WHILE)) {
-			statement_list();
+			compStatNode = statement_list(compStatNode);
 		}
+		
+		return compStatNode;
 	}
 	
 	/**
 	 * statement |
 	 * statement ; statement_list
 	 */
-	public void statement_list() {
-		statement();
+	public CompoundStatementNode statement_list(CompoundStatementNode compStatNode) {
+		compStatNode.addStatement(statement());
 		if (lookAhead != null && lookAhead.getType() == TokenType.SEMICOLON) {
 			match(TokenType.SEMICOLON);
-			statement_list();
+			compStatNode = statement_list(compStatNode);
 		}
+		return compStatNode;
 	}
 	
 	/**
@@ -304,12 +307,14 @@ public class Parser {
 	 * read ( id ) |										// this hasn't been implemented
 	 * write ( expression )									// this hasn't been implemented
 	 */
-	public void statement() {
+	public StatementNode statement() {
 		if (lookAhead != null && lookAhead.getType() == TokenType.ID) {
 			if (this.symTab.isKind(lookAhead.getLexeme(), Kind.VARIABLE)) {
-				variable();
+				AssignmentStatementNode assignStatNode = new AssignmentStatementNode();
+				assignStatNode.setLvalue(variable());
 				match(TokenType.BECOMES);
-				expression();
+				assignStatNode.setExpression(expression());
+				return assignStatNode;
 			}
 			else if (this.symTab.isKind(lookAhead.getLexeme(), Kind.PROCEDURE)) {
 				procedure_statement();
@@ -338,19 +343,22 @@ public class Parser {
 		else {
 			error("statement()");
 		}
+		return null;
 	}
 	
 	/**
 	 * id |
 	 * id [ expression ]
 	 */
-	public void variable() {
+	public VariableNode variable() {
+		VariableNode vNode = new VariableNode(lookAhead.getLexeme());
 		match(TokenType.ID);
 		if (lookAhead != null && lookAhead.getType() == TokenType.LSQBRACKET) {
 			match(TokenType.LSQBRACKET);
 			expression();
 			match(TokenType.RSQBRACKET);
 		}
+		return vNode;
 	}
 	
 	/**
@@ -382,56 +390,67 @@ public class Parser {
 	 * simple_expression |
 	 * simple_expression relop simple_expression
 	 */
-	public void expression() {
-		simple_expression();
+	public ExpressionNode expression() {
+		ExpressionNode eNode = simple_expression();
 		if (lookAhead != null && isRelop(lookAhead)) {
 			relop();
 			simple_expression();
 		}
+		return eNode;
 	}
 	
 	/**
 	 * term simple_part |
 	 * sign term simple_part
 	 */
-	public void simple_expression() {
+	public ExpressionNode simple_expression() {
+		ExpressionNode eNode = null;
 		if (lookAhead != null && (lookAhead.getType() == TokenType.MINUS || lookAhead.getType() == TokenType.PLUS)) {
-			sign();
+			eNode = sign();
 		}
-		term();
+		eNode = term();
 		simple_part();
+		
+		return eNode;
 	}
 	
 	/**
 	 * addop term simple_part |
 	 * lambda
 	 */
-	public void simple_part() {
+	public OperationNode simple_part() {
+		OperationNode oNode = null;
 		if (lookAhead != null && isAddop(lookAhead)) {
-			addop();
+			oNode.setOperation(addop());
 			term();
 			simple_part();
 		}
+		return oNode;
 	}
 	
 	/**
 	 * factor term_part
 	 */
-	public void term() {
-		factor();
-		term_part();
+	public ExpressionNode term() {
+		ExpressionNode eNode = null;
+		eNode = factor();
+		eNode = term_part(eNode);
+		return eNode;
 	}
 	
 	/**
 	 * mulop factor term_part |
 	 * lambda
 	 */
-	public void term_part() {
+	public ExpressionNode term_part(ExpressionNode eNode) {
+		OperationNode oNode = null;
 		if (lookAhead != null && isMulop(lookAhead)) {
-			mulop();
-			factor();
-			term_part();
+			oNode = new OperationNode(mulop());
+			oNode.setLeft(eNode);
+			oNode.setRight(factor());
+			return term_part(oNode);
 		}
+		return eNode;
 	}
 	
 	/**
@@ -442,35 +461,46 @@ public class Parser {
 	 * ( expression ) |
 	 * not factor
 	 */
-	public void factor() {
+	public ExpressionNode factor() {
 		// id
 		if (lookAhead != null && lookAhead.getType() == TokenType.ID) {
+			String name = lookAhead.getLexeme();
 			match(TokenType.ID);
 			if (lookAhead != null && lookAhead.getType() == TokenType.LSQBRACKET) {
 				match(TokenType.LSQBRACKET);
-				expression();
+				ArrayNode eNode = new ArrayNode(name);
+				eNode.setExpression(expression());
 				match(TokenType.RSQBRACKET);
+				return eNode;
 			}
 			else if (lookAhead != null && lookAhead.getType() == TokenType.LPARENTHESES) {
 				match(TokenType.LPARENTHESES);
+				// PROCEDURENODE
+				
 				expression_list();
 				match(TokenType.RPARENTHESES);
+				
 			}
+			return new VariableNode(name);
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.NUMBER) {
+			ValueNode vNode = new ValueNode(lookAhead.getLexeme());
 			match(TokenType.NUMBER);
+			return vNode;
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.LPARENTHESES) {
 			match(TokenType.LPARENTHESES);
-			expression();
+			ExpressionNode eNode = expression();
 			match(TokenType.RPARENTHESES);
+			return eNode;
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.NOT) {
 			match(TokenType.NOT);
-			factor();
+			return factor();
 		}
 		else {
 			error("factor()");
+			return null;
 		}
 	}
 	
@@ -478,16 +508,22 @@ public class Parser {
 	 * + |
 	 * -
 	 */
-	public void sign() {
+	public OperationNode sign() {
+		OperationNode oNode = null;
 		if (lookAhead != null && lookAhead.getType() == TokenType.PLUS) {
 			match(TokenType.PLUS);
+			oNode = new OperationNode(TokenType.PLUS);
+			oNode.setLeft(new ValueNode("0"));
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.MINUS) {
 			match(TokenType.MINUS);
+			oNode = new OperationNode(TokenType.MINUS);
+			oNode.setLeft(new ValueNode("0"));
 		}
 		else {
 			error("sign()");
 		}
+		return oNode;
 	}
 	
 	/**
@@ -507,20 +543,20 @@ public class Parser {
 	/**
 	 * Matches one of the addops specified above, +, -, or OR.
 	 */
-	public void addop() {
+	public TokenType addop() {
 		switch (lookAhead.getType()) {
 			case PLUS:
 				match(TokenType.PLUS);
-				break;
+				return TokenType.PLUS;
 			case MINUS:
 				match(TokenType.MINUS);
-				break;
+				return TokenType.MINUS;
 			case OR:
 				match(TokenType.OR);
-				break;
+				return TokenType.OR;
 			default:
 				error("addop()");
-				break;
+				return TokenType.ILLEGAL;
 		}
 	}
 	
@@ -542,26 +578,26 @@ public class Parser {
 	/**
 	 * Matches one of the mulops specified above, *, /, DIV, MOD, or AND.
 	 */
-	public void mulop() {
+	public TokenType mulop() {
 		switch (lookAhead.getType()) {
 			case ASTERISK:
 				match(TokenType.ASTERISK);
-				break;
+				return TokenType.ASTERISK;
 			case SLASH:
 				match(TokenType.SLASH);
-				break;
+				return TokenType.SLASH;
 			case DIV:
 				match(TokenType.DIV);
-				break;
+				return TokenType.DIV;
 			case MOD:
 				match(TokenType.MOD);
-				break;
+				return TokenType.MOD;
 			case AND:
 				match(TokenType.AND);
-				break;
+				return TokenType.AND;
 			default:
 				error("mulop()");
-				break;
+				return TokenType.ILLEGAL;
 		}
 	}
 	

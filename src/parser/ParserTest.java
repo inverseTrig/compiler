@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import syntaxtree.DeclarationsNode;
+
 class ParserTest {
 
 	/**
@@ -47,17 +49,17 @@ class ParserTest {
 		String test = "var foo : real ; var fi: integer;";
 		System.out.println("---with \"" + test + "\" NOT supposed to have errors");
 		Parser parser = new Parser(test, false);
-		parser.declarations();
+		parser.declarations(new DeclarationsNode());
 
 		test = "var foo : fum ;";
 		System.out.println("---with \"" + test + "\" supposed to have errors");
 		parser = new Parser(test, false);
-		parser.declarations();
+		parser.declarations(new DeclarationsNode());
 
 		test = "var ;";
 		System.out.println("---with \"" + test + "\" supposed to have errors");
 		parser = new Parser(test, false);
-		parser.declarations();
+		parser.declarations(new DeclarationsNode());
 	}
 	
 	/**
