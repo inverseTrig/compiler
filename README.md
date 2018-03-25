@@ -24,7 +24,7 @@ This project is for Programming Languages and Compilers course, keystone for Com
 - SymbolTableTest.java – contains JUnit testing cases for SymbolTable.add(lexeme, DataStorage) and SymbolTable.getKind().
 
 #### /src/syntaxtree/
-- This package contains the code for our syntax tree provided by our professor, Erik Steinmetz. Each node will contain essential information of the code, which will be used to create a .symboltable file with neatly indented contents.
+- This package contains the code for our syntax tree provided by our professor, Erik Steinmetz. Each node will contain essential information of the code, which will be used to create a .symboltable file with neatly indented contents. Additional nodes have been created and added by myself.
 
 #### /src/compiler/
 - CompilerMain.java - Contains the main for the compiler; primarily, as of now, to test the integration of the SymbolTable to the parser.

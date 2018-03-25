@@ -344,7 +344,7 @@ class SyntaxTreeTest {
 	 * Test declarations() to see if it creates the correct DeclarationsNode.
 	 */
 	@Test
-	void testDeclarations() {
+	void testDeclarationsA() {
 		DeclarationsNode dNode = new DeclarationsNode();
 		dNode.addVariable(new VariableNode("fum"));
 		dNode.addVariable(new VariableNode("foo"));
@@ -354,7 +354,24 @@ class SyntaxTreeTest {
 		
 		String expected = dNode.indentedToString(0);
 		
-		String test = "var fee, fi, fo : real; var fum, foo : integer";
+		String test = "var fee, fi, fo : real; var fum, foo : integer;";
+		Parser p = new Parser(test, false);
+		
+		String actual = p.declarations(new DeclarationsNode()).indentedToString(0);
+
+		assertEquals(expected, actual);
+	}
+	
+	/**
+	 * Test declarations() to see if it creates the correct empty DeclarationsNode.
+	 */
+	@Test
+	void testDeclarationsB() {
+		DeclarationsNode dNode = new DeclarationsNode();
+		
+		String expected = dNode.indentedToString(0);
+		
+		String test = "";
 		Parser p = new Parser(test, false);
 		
 		String actual = p.declarations(new DeclarationsNode()).indentedToString(0);
