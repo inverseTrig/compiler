@@ -187,6 +187,7 @@ public class Parser {
 		if (lookAhead != null && lookAhead.getType() == TokenType.FUNCTION) {
 			match(TokenType.FUNCTION);
 			subProgNode = new SubProgramNode(lookAhead.getLexeme());
+			subProgNode.setType(SubProgramType.FUNCTION);
 			this.symTab.add(lookAhead.getLexeme(), Kind.FUNCTION);
 			match(TokenType.ID);
 			
@@ -213,7 +214,6 @@ public class Parser {
 				paramNode.addVariable(vN);
 			}
 			subProgNode.setParameters(paramNode);
-			System.out.println(subProgNode.indentedToString(0));
 			
 			match(TokenType.SEMICOLON);
 		}
@@ -317,28 +317,32 @@ public class Parser {
 				return assignStatNode;
 			}
 			else if (this.symTab.isKind(lookAhead.getLexeme(), Kind.PROCEDURE)) {
-				procedure_statement();
+				return procedure_statement();
 			}
 			else {
 				error("statement().VARorPROC");
 			}
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.BEGIN) {
-			compound_statement();
+			return compound_statement();
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.IF) {
+			IfStatementNode ifStatNode = new IfStatementNode();
 			match(TokenType.IF);
-			expression();
+			ifStatNode.setTest(expression());
 			match(TokenType.THEN);
-			statement();
+			ifStatNode.setThenStatement(statement());
 			match(TokenType.ELSE);
-			statement();
+			ifStatNode.setElseStatement(statement());
+			return ifStatNode;
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.WHILE) {
+			WhileStatementNode whileStatNode = new WhileStatementNode();
 			match(TokenType.WHILE);
-			expression();
+			whileStatNode.setTest(expression());
 			match(TokenType.DO);
-			statement();
+			whileStatNode.setDoStatement(statement());
+			return whileStatNode;
 		}
 		else {
 			error("statement()");
@@ -351,39 +355,46 @@ public class Parser {
 	 * id [ expression ]
 	 */
 	public VariableNode variable() {
-		VariableNode vNode = new VariableNode(lookAhead.getLexeme());
+		String name = lookAhead.getLexeme();
 		match(TokenType.ID);
 		if (lookAhead != null && lookAhead.getType() == TokenType.LSQBRACKET) {
+			ArrayNode aNode = new ArrayNode(name);
 			match(TokenType.LSQBRACKET);
-			expression();
+			aNode.setExpression(expression());
 			match(TokenType.RSQBRACKET);
 		}
-		return vNode;
+		return new VariableNode(name);
 	}
 	
 	/**
 	 * id |
 	 * id ( expression_list )
 	 */
-	public void procedure_statement() {
+	public ProcedureStatementNode procedure_statement() {
+		ProcedureStatementNode pNode = new ProcedureStatementNode(lookAhead.getLexeme());
 		match(TokenType.ID);
 		if (lookAhead != null && lookAhead.getType() == TokenType.LPARENTHESES) {
 			match(TokenType.LPARENTHESES);
-			expression_list();
+			ArrayList<ExpressionNode> eNodes = expression_list(new ArrayList<ExpressionNode>());
 			match(TokenType.RPARENTHESES);
+			for (ExpressionNode eN : eNodes) {
+				pNode.addExpression((eN));
+			}
 		}
+		return pNode;
 	}
 	
 	/**
 	 * expression |
 	 * expression , expression_list
 	 */
-	public void expression_list() {
-		expression();
+	public ArrayList<ExpressionNode> expression_list(ArrayList<ExpressionNode> eNodes) {
+		eNodes.add(expression());
 		if (lookAhead != null && lookAhead.getType() == TokenType.COMMA) {
 			match(TokenType.COMMA);
-			expression_list();
+			eNodes = expression_list(eNodes);
 		}
+		return eNodes;
 	}
 	
 	/**
@@ -393,8 +404,10 @@ public class Parser {
 	public ExpressionNode expression() {
 		ExpressionNode eNode = simple_expression();
 		if (lookAhead != null && isRelop(lookAhead)) {
-			relop();
-			simple_expression();
+			OperationNode oNode = new OperationNode(relop());
+			oNode.setLeft(eNode);
+			oNode.setRight(simple_expression());
+			return oNode;
 		}
 		return eNode;
 	}
@@ -405,12 +418,17 @@ public class Parser {
 	 */
 	public ExpressionNode simple_expression() {
 		ExpressionNode eNode = null;
+		OperationNode oNode = null;
 		if (lookAhead != null && (lookAhead.getType() == TokenType.MINUS || lookAhead.getType() == TokenType.PLUS)) {
-			eNode = sign();
+			oNode = sign();
 		}
-		eNode = term();
-		simple_part();
-		
+		if (oNode != null) {
+			oNode.setRight(term());
+			eNode = oNode;
+		} else {
+			eNode = term();
+		}
+		eNode = simple_part(eNode);
 		return eNode;
 	}
 	
@@ -418,14 +436,15 @@ public class Parser {
 	 * addop term simple_part |
 	 * lambda
 	 */
-	public OperationNode simple_part() {
+	public ExpressionNode simple_part(ExpressionNode eNode) {
 		OperationNode oNode = null;
 		if (lookAhead != null && isAddop(lookAhead)) {
-			oNode.setOperation(addop());
-			term();
-			simple_part();
+			oNode = new OperationNode(addop());
+			oNode.setLeft(eNode);
+			oNode.setRight(term());
+			return simple_part(oNode);
 		}
-		return oNode;
+		return eNode;
 	}
 	
 	/**
@@ -476,9 +495,13 @@ public class Parser {
 			else if (lookAhead != null && lookAhead.getType() == TokenType.LPARENTHESES) {
 				match(TokenType.LPARENTHESES);
 				// PROCEDURENODE
-				
-				expression_list();
+				ProcedureNode pNode = new ProcedureNode(name);
+				ArrayList<ExpressionNode> eNodes = expression_list(new ArrayList<ExpressionNode>());
 				match(TokenType.RPARENTHESES);
+				for (ExpressionNode eN : eNodes) {
+					pNode.addExpression(eN);
+				}
+				return pNode;
 				
 			}
 			return new VariableNode(name);
@@ -509,21 +532,22 @@ public class Parser {
 	 * -
 	 */
 	public OperationNode sign() {
-		OperationNode oNode = null;
 		if (lookAhead != null && lookAhead.getType() == TokenType.PLUS) {
 			match(TokenType.PLUS);
-			oNode = new OperationNode(TokenType.PLUS);
+			OperationNode oNode = new OperationNode(TokenType.PLUS);
 			oNode.setLeft(new ValueNode("0"));
+			return oNode;
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.MINUS) {
 			match(TokenType.MINUS);
-			oNode = new OperationNode(TokenType.MINUS);
+			OperationNode oNode = new OperationNode(TokenType.MINUS);
 			oNode.setLeft(new ValueNode("0"));
+			return oNode;
 		}
 		else {
 			error("sign()");
 		}
-		return oNode;
+		return null;
 	}
 	
 	/**
@@ -619,29 +643,29 @@ public class Parser {
 	/**
 	 * Matches one of the mulops specified above, =, <>, <, <=, >=, or >.
 	 */
-	public void relop() {
+	public TokenType relop() {
 		switch (lookAhead.getType()) {
 			case EQUAL:
 				match(TokenType.EQUAL);
-				break;
+				return TokenType.EQUAL;
 			case NOTEQUAL:
 				match(TokenType.NOTEQUAL);
-				break;
+				return TokenType.NOTEQUAL;
 			case LESSTHAN:
 				match(TokenType.LESSTHAN);
-				break;
+				return TokenType.LESSTHAN;
 			case LESSTHANOREQUALTO:
 				match(TokenType.LESSTHANOREQUALTO);
-				break;
+				return TokenType.LESSTHANOREQUALTO;
 			case GREATERTHAN:
 				match(TokenType.GREATERTHAN);
-				break;
+				return TokenType.GREATERTHAN;
 			case GREATERTHANOREQUALTO:
 				match(TokenType.GREATERTHANOREQUALTO);
-				break;
+				return TokenType.GREATERTHANOREQUALTO;
 			default:
 				error("relop()");
-				break;
+				return TokenType.ILLEGAL;
 		}
 	}
 	

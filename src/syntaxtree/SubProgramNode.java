@@ -2,7 +2,7 @@ package syntaxtree;
 
 public class SubProgramNode extends ProgramNode {
 	
-	SubProgramType type;
+	private SubProgramType type;
 	private ParameterStatementNode parameters;
 
 	public ParameterStatementNode getParameters() {
@@ -31,7 +31,7 @@ public class SubProgramNode extends ProgramNode {
 	@Override
 	public String indentedToString(int level) {
 		String answer = this.indentation( level);
-        answer += "Program: " + getName() + "\n";
+        answer += "SubProgram: " + getName() + "\n";
         answer += getParameters().indentedToString( level + 1);
         answer += getVariables().indentedToString( level + 1);
         answer += getFunctions().indentedToString( level + 1);
