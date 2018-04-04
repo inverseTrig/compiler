@@ -5,3 +5,9 @@
 *.symboltable
 
 *.syntaxtree
+
+.idea
+
+*.iml
+
+
