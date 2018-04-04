@@ -7,6 +7,18 @@ package syntaxtree;
 
 public abstract class ExpressionNode extends SyntaxTreeNode {
 	
-	public DataType dType;
+	public DataType dataType;
+	
+	public ExpressionNode() {
+		this.dataType = null;
+	}
+
+	public DataType getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(DataType dataType) {
+		this.dataType = dataType;
+	}
 	
 }

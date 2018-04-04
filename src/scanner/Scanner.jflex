@@ -40,7 +40,7 @@ id				= {letter}({letter}|{digit}|"_")*
 integers		= {digit}{digit}*
 decimals		= {integers}(\.){integers}*
 exponents		= ({integers}|{decimals}){E}{sign}{integers}
-number			= {integers} | {decimals} | {exponents}
+real			= {decimals} | {exponents}
 
 symbol			= (\;|\,|\.|\:|\[|\]|\(|\)|\+|\-|\=|\<|\>|\*|\/|<>|<=|>=|:=)
 other			= .
@@ -62,10 +62,16 @@ other			= .
 					return new Token(yytext(), TokenType.ID);
 				}
 				
-{number}		{
-					/** FOUND NUMBER */
+{integers}		{
+					/** FOUND INTEGERS */
 					
-					return new Token(yytext(), TokenType.NUMBER);
+					return new Token(yytext(), TokenType.INTEGER);
+				}
+				
+{real}		{
+					/** FOUND DECIMALS/EXPONENTS (REAL) **/
+					
+					return new Token(yytext(), TokenType.REAL);
 				}
 	
 {symbol}		{

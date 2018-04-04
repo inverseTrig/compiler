@@ -5,7 +5,7 @@ package scanner;
  * These ENUMs will also be used in the LookupTable to pair with the appropriate lexeme.
  */
 public enum TokenType {
-	NUMBER, ID, ILLEGAL,
+	ID, ILLEGAL,
     AND, ARRAY, BEGIN, DIV, DO, ELSE, END, FUNCTION, IF, INTEGER, MOD, NOT, OF, OR,
     PROCEDURE, PROGRAM, REAL, THEN, VAR, WHILE, SEMICOLON, COMMA, PERIOD, COLON,
     LSQBRACKET, RSQBRACKET, LPARENTHESES, RPARENTHESES, PLUS, MINUS, EQUAL, NOTEQUAL,

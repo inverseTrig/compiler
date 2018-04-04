@@ -60,8 +60,8 @@ public class Scanner {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\1\1\1\2\1\3\1\4\3\5\1\0\1\4"+
-    "\1\0\1\4";
+    "\1\0\1\1\1\2\1\3\1\4\3\5\1\0\1\6"+
+    "\1\0\1\6";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[12];
@@ -564,30 +564,36 @@ public class Scanner {
 					
 					return new Token(yytext(), TokenType.ILLEGAL);
             }
-          case 6: break;
+          case 7: break;
           case 2: 
             { /* Ignore Whitespace */
             }
-          case 7: break;
+          case 8: break;
           case 3: 
             { /** FOUND ID */
 					
 					if (LUT.get(yytext()) != null) return new Token(yytext(), LUT.get(yytext()));
 					return new Token(yytext(), TokenType.ID);
             }
-          case 8: break;
-          case 4: 
-            { /** FOUND NUMBER */
-					
-					return new Token(yytext(), TokenType.NUMBER);
-            }
           case 9: break;
+          case 4: 
+            { /** FOUND INTEGERS */
+					
+					return new Token(yytext(), TokenType.INTEGER);
+            }
+          case 10: break;
           case 5: 
             { /** FOUND SYMBOL */
 					
 					return new Token(yytext(), LUT.get(yytext()));
             }
-          case 10: break;
+          case 11: break;
+          case 6: 
+            { /** FOUND DECIMALS/EXPONENTS (REAL) **/
+					
+					return new Token(yytext(), TokenType.REAL);
+            }
+          case 12: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

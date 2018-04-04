@@ -96,17 +96,19 @@ public class Parser {
 	 */
 	public DeclarationsNode declarations(DeclarationsNode decNode) {
 		ArrayList<VariableNode> vNodes = new ArrayList<>();
+		DataType dataType = null;
 		
 		if (lookAhead != null && lookAhead.getType() == TokenType.VAR) {
 			match(TokenType.VAR);
 			vNodes = identifier_list(new ArrayList<VariableNode>());
 			match(TokenType.COLON);
-			type();
+			dataType = type();
 			match(TokenType.SEMICOLON);
 			decNode = declarations(decNode);
 		}
 		
 		for (VariableNode vN : vNodes) {
+			symTab.setDataType(vN.getName(), dataType);
 			decNode.addVariable(vN);
 		}
 		
@@ -117,32 +119,39 @@ public class Parser {
 	 * standard_type |
 	 * array [ num : num ] of standard_type
 	 */
-	public void type() {
+	public DataType type() {
+		DataType dataType = null;
 		if (lookAhead != null && lookAhead.getType() == TokenType.ARRAY) {
 			match(TokenType.ARRAY);
 			match(TokenType.LSQBRACKET);
-			match(TokenType.NUMBER);
+			if (lookAhead.getType() == TokenType.INTEGER) { match(TokenType.INTEGER); }
+			else { match(TokenType.REAL); }
 			match(TokenType.COLON);
-			match(TokenType.NUMBER);
+			if (lookAhead.getType() == TokenType.INTEGER) { match(TokenType.INTEGER); }
+			else { match(TokenType.REAL); }
 			match(TokenType.RSQBRACKET);
 			match(TokenType.OF);
 		}
-		standard_type();
+		dataType = standard_type();
+		return dataType;
 	}
 	
 	/**
 	 * integer|
 	 * real
 	 */
-	public void standard_type() {
+	public DataType standard_type() {
 		if (lookAhead != null && lookAhead.getType() == TokenType.INTEGER) {
 			match(TokenType.INTEGER);
+			return DataType.INTEGER;
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.REAL) {
 			match(TokenType.REAL);
+			return DataType.REAL;
 		}
 		else {
 			error("standard_type()");
+			return null;
 		}
 	}
 	
@@ -199,7 +208,8 @@ public class Parser {
 			subProgNode.setParameters((paramNode));
 			
 			match(TokenType.COLON);
-			standard_type();
+			DataType dataType = standard_type();
+			this.symTab.setDataType(subProgNode.getName(), dataType);
 			match(TokenType.SEMICOLON);
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.PROCEDURE) {
@@ -246,7 +256,7 @@ public class Parser {
 	public ArrayList<VariableNode> parameter_list(ArrayList<VariableNode> vNodes) {
 		ArrayList<VariableNode> vNode = identifier_list(new ArrayList<VariableNode>());
 		match(TokenType.COLON);
-		type();
+		DataType dataType = type();
 		if (lookAhead != null && lookAhead.getType() == TokenType.SEMICOLON) {
 			match(TokenType.SEMICOLON);
 			vNode = parameter_list(vNode);
@@ -254,6 +264,7 @@ public class Parser {
 		
 		for (VariableNode vN : vNode) {
 			vNodes.add(vN);
+			symTab.setDataType(vN.getName(), dataType);
 		}
 		
 		return vNodes;
@@ -316,7 +327,7 @@ public class Parser {
 				assignStatNode.setExpression(expression());
 				return assignStatNode;
 			}
-			else if (this.symTab.isKind(lookAhead.getLexeme(), Kind.PROCEDURE)) {
+			else if (this.symTab.isKind(lookAhead.getLexeme(), Kind.PROCEDURE) || this.symTab.isKind(lookAhead.getLexeme(), Kind.FUNCTION)) {
 				return procedure_statement();
 			}
 			else {
@@ -363,7 +374,10 @@ public class Parser {
 			aNode.setExpression(expression());
 			match(TokenType.RSQBRACKET);
 		}
-		return new VariableNode(name);
+		VariableNode vN = new VariableNode(name);
+		DataType dataType = this.symTab.getDataType(name);
+		vN.setDataType(dataType);
+		return vN;
 	}
 	
 	/**
@@ -496,6 +510,7 @@ public class Parser {
 				match(TokenType.LPARENTHESES);
 				// PROCEDURENODE
 				ProcedureNode pNode = new ProcedureNode(name);
+				pNode.setDataType(this.symTab.getDataType(name));
 				ArrayList<ExpressionNode> eNodes = expression_list(new ArrayList<ExpressionNode>());
 				match(TokenType.RPARENTHESES);
 				for (ExpressionNode eN : eNodes) {
@@ -506,9 +521,17 @@ public class Parser {
 			}
 			return new VariableNode(name);
 		}
-		else if (lookAhead != null && lookAhead.getType() == TokenType.NUMBER) {
+		else if (lookAhead != null && (lookAhead.getType() == TokenType.INTEGER || lookAhead.getType() == TokenType.REAL)) {
 			ValueNode vNode = new ValueNode(lookAhead.getLexeme());
-			match(TokenType.NUMBER);
+			if (lookAhead.getType() == TokenType.INTEGER) {
+				vNode.setDataType(DataType.INTEGER);
+				match(TokenType.INTEGER);
+			} else if (lookAhead.getType() == TokenType.REAL) {
+				vNode.setDataType(DataType.REAL);
+				match(TokenType.REAL);
+			} else {
+				error("Setting DataType... this shouldn't be happening");
+			}
 			return vNode;
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.LPARENTHESES) {

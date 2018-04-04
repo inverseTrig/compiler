@@ -14,7 +14,7 @@ public class ProcedureNode extends ExpressionNode {
 	@Override
 	public String indentedToString(int level) {
 		String answer = this.indentation( level);
-        answer += "ProcedureNode: " + getName() + "\n";
+        answer += "ProcedureNode: " + getName() + " (" + this.dataType + ")" + "\n";
         for( ExpressionNode expression : expressions) {
             answer += expression.indentedToString( level + 1);
         }

@@ -1,6 +1,7 @@
 package compiler;
 
 import parser.Parser;
+import scanner.TokenType;
 import syntaxtree.*;
 
 /**
@@ -21,6 +22,10 @@ public class CompilerMain {
 			parser.writeOut(filename);					// This would print out a test.symboltable file to the directory of the project.
 			System.out.println(pNode.indentedToString(0));
 		} catch (Exception e) { e.printStackTrace(); }
+		
+		OperationNode oNode = new OperationNode(TokenType.MINUS);
+		
+		System.out.println(oNode.dataType);
 		
 	}
 }

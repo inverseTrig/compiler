@@ -3,6 +3,8 @@ package symboltable;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import syntaxtree.DataType;
+
 /**
  * Contains the main for the compiler; primarily to test the integration of the SymbolTable to the parser.
  * @author heechan
@@ -38,6 +40,25 @@ public class SymbolTable {
 	}
 	
 	/**
+	 * Returns the datatype using lexeme as key value.
+	 * @param lexeme
+	 * @return
+	 */
+	public DataType getDataType(String lexeme) {
+		if (this.global.containsKey(lexeme)) return this.global.get(lexeme).getDataType();
+		return null;
+	}
+	
+	/**
+	 * Returns the datatype using lexeme as key value.
+	 * @param lexeme
+	 * @return
+	 */
+	public void setDataType(String lexeme, DataType dataType) {
+		if (this.global.containsKey(lexeme)) this.global.get(lexeme).setDataType(dataType);
+	}
+	
+	/**
 	 * Returns boolean if the lexeme passed in is the kind requested.
 	 * Returns true if it is, and false otherwise.
 	 * @param lexeme
@@ -59,6 +80,7 @@ public class SymbolTable {
 	private class DataStorage {
 		private String lexeme;
 		private Kind kind;
+		private DataType dataType;
 		
 		/**
 		 * Constructor for our DataStorage - this holds lexeme and kind.
@@ -68,6 +90,7 @@ public class SymbolTable {
 		private DataStorage(String lexeme, Kind kind) {
 			this.lexeme = lexeme;
 			this.kind = kind;
+			this.dataType = null;
 		}
 		
 		/**
@@ -80,6 +103,26 @@ public class SymbolTable {
 		private Kind getKind() {
 			return this.kind;
 		}
+
+		/**
+		 * This API call is for getDataType to use.
+		 * If getDataType() is not implemented in SymbolTable, we would have to be calling something like:
+		 * st.getValue(lexeme).getDataType(); 
+		 * this would be a lengthy function call and this method would have to be public as well.
+		 * @return
+		 */
+		private DataType getDataType() {
+			return dataType;
+		}
+
+		/**
+		 * This API call is for setDataType to use.
+		 * @return
+		 */
+		private void setDataType(DataType dataType) {
+			this.dataType = dataType;
+		}
+		
 	}
 
 	/**
@@ -87,12 +130,13 @@ public class SymbolTable {
 	 */
 	@Override
 	public String toString() {
-		String s = "Key\t\t\t\tEntry\n--------------------------------------------\n";
+		String s = "Key\t\t\t\tEntry\t\t\t\tDataType\n--------------------------------------------\n";
 		for (Entry<String, DataStorage> entry: this.global.entrySet()) {
-			if (entry.getKey().length() > 11)s += entry.getKey() + "\t" + entry.getValue().getKind() + "\n";
-			else if (entry.getKey().length() > 7) s += entry.getKey() + "\t\t" + entry.getValue().getKind() + "\n";
-			else if (entry.getKey().length() > 3) s += entry.getKey() + "\t\t\t" + entry.getValue().getKind() + "\n";
-			else s += entry.getKey() + "\t\t\t\t" + entry.getValue().getKind() + "\n";
+			if (entry.getKey().length() > 11)s += entry.getKey() + "\t" + entry.getValue().getKind();
+			else if (entry.getKey().length() > 7) s += entry.getKey() + "\t\t" + entry.getValue().getKind();
+			else if (entry.getKey().length() > 3) s += entry.getKey() + "\t\t\t" + entry.getValue().getKind();
+			else s += entry.getKey() + "\t\t\t\t" + entry.getValue().getKind();
+			s += "\t\t\t\t" + entry.getValue().getDataType() + "\n";
 		}
 		return s;
 	}
