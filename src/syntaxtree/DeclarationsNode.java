@@ -19,6 +19,10 @@ public class DeclarationsNode extends SyntaxTreeNode {
         vars.add( aVariable);
     }
     
+    public ArrayList<VariableNode> getVariable() {
+    	return this.vars;
+    }
+    
     /**
      * Creates a String representation of this declarations node and its children.
      * @param level The tree level at which this node resides.

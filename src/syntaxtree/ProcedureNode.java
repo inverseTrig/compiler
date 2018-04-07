@@ -33,4 +33,7 @@ public class ProcedureNode extends ExpressionNode {
         this.expressions.add( expression);
     }
 	
+	public ArrayList<ExpressionNode> getExpressions() {
+		return this.expressions;
+	}
 }

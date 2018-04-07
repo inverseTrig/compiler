@@ -23,6 +23,10 @@ public class ProcedureStatementNode extends StatementNode {
 		this.name = name;
 	}
     
+    public ArrayList<ExpressionNode> getExpressions() {
+		return expressions;
+	}
+    
 	@Override
 	public String indentedToString(int level) {
 		String answer = this.indentation( level);

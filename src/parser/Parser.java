@@ -108,8 +108,9 @@ public class Parser {
 		}
 		
 		for (VariableNode vN : vNodes) {
-			symTab.setDataType(vN.getName(), dataType);
+			vN.setDataType(dataType);
 			decNode.addVariable(vN);
+			symTab.setDataType(vN.getName(), dataType);
 		}
 		
 		return decNode;
@@ -263,6 +264,7 @@ public class Parser {
 		}
 		
 		for (VariableNode vN : vNode) {
+			vN.setDataType(dataType);
 			vNodes.add(vN);
 			symTab.setDataType(vN.getName(), dataType);
 		}
@@ -519,7 +521,9 @@ public class Parser {
 				return pNode;
 				
 			}
-			return new VariableNode(name);
+			VariableNode vNode = new VariableNode(name);
+			vNode.setDataType(symTab.getDataType(name));
+			return vNode;
 		}
 		else if (lookAhead != null && (lookAhead.getType() == TokenType.INTEGER || lookAhead.getType() == TokenType.REAL)) {
 			ValueNode vNode = new ValueNode(lookAhead.getLexeme());
