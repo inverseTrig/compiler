@@ -1,5 +1,5 @@
 package syntaxtree;
 
 public enum DataType {
-	INTEGER, REAL
+	INTEGER, REAL, BOOLEAN
 }

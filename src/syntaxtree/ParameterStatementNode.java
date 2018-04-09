@@ -14,6 +14,10 @@ public class ParameterStatementNode extends SyntaxTreeNode {
         vars.add( aVariable);
     }
     
+    public ArrayList<VariableNode> getParameter() {
+    	return vars;
+    }
+    
     /**
      * Creates a String representation of this declarations node and its children.
      * @param level The tree level at which this node resides.

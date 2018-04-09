@@ -1,7 +1,8 @@
 package syntaxtree;
 
 public class SubProgramNode extends ProgramNode {
-	
+
+    private DataType dataType;
 	private SubProgramType type;
 	private ParameterStatementNode parameters;
 
@@ -20,9 +21,18 @@ public class SubProgramNode extends ProgramNode {
 	public void setType(SubProgramType type) {
 		this.type = type;
 	}
+	
+	public DataType getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(DataType dataType) {
+		this.dataType = dataType;
+	}
 
 	public SubProgramNode(String aName) {
 		super(aName);
+		dataType = null;
 		setVariables(new DeclarationsNode());
 		setFunctions(new SubProgramDeclarationsNode());
 		setMain(new CompoundStatementNode());

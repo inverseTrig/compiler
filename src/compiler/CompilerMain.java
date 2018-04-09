@@ -27,8 +27,15 @@ public class CompilerMain {
 			parser.writeOut(filename);					// This would print out a test.symboltable file to the directory of the project.
 			System.out.println(pNode.indentedToString(0));
 			
+//			sNode = pNode.getMain().getStatements().get(3);
+//
+//			AssignmentStatementNode asn = (AssignmentStatementNode) sNode;
+//			System.out.println(asn.getExpression().dataType);
+			
+			
 			SemanticAnalyzer sA = new SemanticAnalyzer(pNode);
 			sA.checkVariablesDeclared();
+			sA.checkVariablesTypes();
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 }

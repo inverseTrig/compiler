@@ -9,11 +9,10 @@ end ;
 
 
 begin
-   fum(3);
-   f := 5;
+   f := 5 + 3.0 * fi;
    if num < 3
    then f := 3 + 2
    else f := 3 - 2.0;
-   foo := 3 + fi + fum + fo
+   fi := 5.0
 end
 .

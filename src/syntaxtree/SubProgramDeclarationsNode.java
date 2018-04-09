@@ -15,6 +15,10 @@ public class SubProgramDeclarationsNode extends SyntaxTreeNode {
         procs.add( aSubProgram);
     }
     
+    public ArrayList<SubProgramNode> getProcs() {
+		return procs;
+	}
+    
     /**
      * Creates a String representation of this node and its children.
      * @param level The tree level at which this node resides.
@@ -29,5 +33,7 @@ public class SubProgramDeclarationsNode extends SyntaxTreeNode {
         }
         return answer;
     }
+
+	
     
 }

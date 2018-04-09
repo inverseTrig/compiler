@@ -210,6 +210,7 @@ public class Parser {
 			
 			match(TokenType.COLON);
 			DataType dataType = standard_type();
+			subProgNode.setDataType(dataType);
 			this.symTab.setDataType(subProgNode.getName(), dataType);
 			match(TokenType.SEMICOLON);
 		}
