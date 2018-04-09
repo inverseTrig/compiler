@@ -1,10 +1,6 @@
 package compiler;
 
-import java.util.ArrayList;
-
 import parser.Parser;
-import scanner.TokenType;
-import symboltable.*;
 import syntaxtree.*;
 import semanticanalyzer.*;
 
@@ -19,7 +15,6 @@ public class CompilerMain {
 		
 		String filename = System.getProperty("user.dir") + "/" + "test.pas";					// This would mean a file test.pas needs to exist in the directory of the project.	
 		Parser parser;
-		StatementNode sNode = null;
 		
 		try {		
 			parser = new Parser(filename, true); 		// Initialize the parser using the constructor.
@@ -32,10 +27,10 @@ public class CompilerMain {
 //			AssignmentStatementNode asn = (AssignmentStatementNode) sNode;
 //			System.out.println(asn.getExpression().dataType);
 			
-			
 			SemanticAnalyzer sA = new SemanticAnalyzer(pNode);
-			sA.checkVariablesDeclared();
-			sA.checkVariablesTypes();
+			sA.Analyze();
+			pNode = sA.getPNode();
+			
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 }

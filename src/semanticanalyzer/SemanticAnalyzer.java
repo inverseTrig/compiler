@@ -3,7 +3,6 @@ package semanticanalyzer;
 import java.util.ArrayList;
 
 import scanner.TokenType;
-import symboltable.SymbolTable;
 import syntaxtree.*;
 
 public class SemanticAnalyzer {
@@ -18,12 +17,26 @@ public class SemanticAnalyzer {
 	}
 	
 	
-	public void checkVariablesTypes() {
+	public void Analyze() {
+		this.checkVariablesDeclared();
+		this.checkVariablesTypes();
+		
+		if (!this.getPNode().getFunctions().getProcs().isEmpty()) {
+			for (int i = 0; i < this.getPNode().getFunctions().getProcs().size(); i++) {
+				SemanticAnalyzer sA = new SemanticAnalyzer(this.getPNode().getFunctions().getProcs().get(i));
+				sA.Analyze();
+				this.getPNode().getFunctions().getProcs().set(i, (SubProgramNode) sA.getPNode());
+			}
+		}
+		System.out.println(pNode.indentedToString(0));
+	}
+	
+	
+	private void checkVariablesTypes() {
 		
 		for (StatementNode sN : pNode.getMain().getStatements()) {
 			traverseStatementType(sN);
 		}
-		System.out.println(pNode.indentedToString(0));
 	}
 	
 	private DataType traverseStatementType(StatementNode statementNode) {
@@ -114,7 +127,7 @@ public class SemanticAnalyzer {
 	
 	
 	
-	public void checkVariablesDeclared() {
+	private void checkVariablesDeclared() {
 		ArrayList<VariableNode> variablesDeclared = pNode.getVariables().getVariable();
 		if (this.pNode instanceof SubProgramNode) { variablesDeclared.addAll( (((SubProgramNode) pNode).getParameters()).getParameter() ); }
 		ArrayList<VariableNode> variablesUsed = new ArrayList<VariableNode>();
