@@ -27,7 +27,7 @@ This project is for Programming Languages and Compilers course, keystone for Com
 - This package contains the code for our syntax tree provided by our professor, Erik Steinmetz. Each node will contain essential information of the code, which will be used to create a .symboltable file with neatly indented contents. Additional nodes have been created and added by myself.
 
 #### /src/semanticanalyzer/
-- This package contains the code that uses the produced syntax tree and checks to see if any of the below conditions are unmet. If a condition is unmet, code generation would not occur and the user would know what needs to be changed.:
+- This package contains the code that uses the produced syntax tree and checks to see if any of the below conditions are unmet. If a condition is unmet, code generation would not occur and the user would know what needs to be changed:
   - All variables are declared before being used.
   - ExpressionNodes will hold a type, and these types must match across assignments.
 
