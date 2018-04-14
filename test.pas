@@ -7,7 +7,6 @@ begin
 	foo := 5 * 3 + 6
 end ;
 
-
 begin
    f := 5 * fi;
    if num < 3

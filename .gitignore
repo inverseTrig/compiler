@@ -6,6 +6,8 @@
 
 *.syntaxtree
 
+*.asm
+
 .idea
 
 *.iml

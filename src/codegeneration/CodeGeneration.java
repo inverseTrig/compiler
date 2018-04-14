@@ -27,8 +27,9 @@ public class CodeGeneration {
 	}
 	
 	/**
-	 * This method prints out a .symboltable file into the directory of the project.
-	 * @param s
+	 * This method prints out a .asm file into the directory of the project.
+	 * @param filename
+	 * @param root
 	 */
 	public static void writeCodeToFile(String filename, ProgramNode root) {
 		PrintWriter write;
@@ -79,7 +80,11 @@ public class CodeGeneration {
 	}
 	
 	
-	
+	/**
+	 * Writes code for ParameterStatementNode.
+	 * @param node
+	 * @return
+	 */
 	public static String writeCode(ParameterStatementNode node) {
 		String code = "";
 		ArrayList<VariableNode> variables = node.getParameter();
@@ -89,6 +94,11 @@ public class CodeGeneration {
 		return (code);
 	}
 	
+	/**
+	 * Writes code for SubProgramNode.
+	 * @param node
+	 * @return
+	 */
 	public static String writeCode(SubProgramNode node) {
 		String code = "";
 		if (node.getFunctions() != null) {
@@ -102,6 +112,11 @@ public class CodeGeneration {
 		return (code);
 	}
 	
+	/**
+	 * Writes code for DeclarationsNode.
+	 * @param node
+	 * @return
+	 */
 	public static String writeCode(DeclarationsNode node) {
 		String code = "";
 		ArrayList<VariableNode> variables = node.getVariable();
@@ -111,6 +126,11 @@ public class CodeGeneration {
 		return (code);
 	}
 	
+	/**
+	 * Writes code for CompoundStatementNode.
+	 * @param node
+	 * @return
+	 */
 	public static String writeCode(CompoundStatementNode node) {
 		String code = "";
 		ArrayList<StatementNode> statements = node.getStatements();
@@ -120,10 +140,14 @@ public class CodeGeneration {
 		return (code);
 	}
 	
-/**
- * STATEMENT NODES	
- */
 	
+	/**
+	 * Writes code for the given node. This generic write code takes any
+	 * StatementNode, and then recasts according to subclass type for dispatching.
+	 * 
+	 * @param node
+	 *            The node for which to write code.
+	 */
 	public static String writeCode(StatementNode node) {
 		String nodeCode = null;
 
@@ -145,6 +169,10 @@ public class CodeGeneration {
 		return (nodeCode);
 	}
 	
+	/** Writes code for AssignmentStatementNode.
+	 * @param node
+	 * @return
+	 */
 	public static String writeCode(AssignmentStatementNode node) {
 		String code = "# Assignment-Statement\n";
 		ExpressionNode expression = node.getExpression();
@@ -154,12 +182,22 @@ public class CodeGeneration {
 		return (code);
 	}
 
+	/**
+	 * Writes code for Procedure StatementNode.
+	 * @param node
+	 * @return
+	 */
 	public static String writeCode(ProcedureStatementNode node) {
 		String code = null;
-		
+		// Still needs to be implemented		
 		return ("\n");
 	}
 	
+	/**
+	 * Writes code for IfStatementNode.
+	 * @param node
+	 * @return
+	 */
 	public static String writeCode(IfStatementNode node) {
 		String code = "\n# If-Statement\n";
 		hex = generateHex();
@@ -176,6 +214,11 @@ public class CodeGeneration {
 		return (code);
 	}
 	
+	/**
+	 * Writes code for WhileStatementNode.
+	 * @param node
+	 * @return
+	 */
 	public static String writeCode(WhileStatementNode node) {
 		String code = "\n# While-Statement\n";
 		hex = generateHex();
@@ -192,6 +235,11 @@ public class CodeGeneration {
 		return (code);
 	}
 	
+	/**
+	 * Writes code for ReadStatementNode.
+	 * @param node
+	 * @return
+	 */
 	public static String writeCode(ReadStatementNode node) {
 		String code = "\n# Read-Statement\n";
 		
@@ -211,6 +259,11 @@ public class CodeGeneration {
 		return (code);
 	}
 	
+	/**
+	 * Writes codes for WriteStatementNode.
+	 * @param node
+	 * @return
+	 */
 	public static String writeCode(WriteStatementNode node) {
 		String code = "\n# Write-Statement\n";
 		
@@ -236,10 +289,6 @@ public class CodeGeneration {
 		
 		return code;
 	}
-	
-/**
- * EXPRESSION NODES	
- */
 
 	/**
 	 * Writes code for the given node. This generic write code takes any
@@ -286,32 +335,32 @@ public class CodeGeneration {
 		if (kindOfOp == TokenType.PLUS) {
 			code += "add     " + resultRegister + ",   " + leftRegister + ",   " + rightRegister + "\n";
 		}
-		if (kindOfOp == TokenType.MINUS) {
+		else if (kindOfOp == TokenType.MINUS) {
 			code += "sub     " + resultRegister + ",   " + leftRegister + ",   " + rightRegister + "\n";
 		}
-		if (kindOfOp == TokenType.ASTERISK) {
+		else if (kindOfOp == TokenType.ASTERISK) {
 			code += "mult    " + leftRegister + ",   " + rightRegister + "\n";
 			code += "mflo    " + resultRegister + "\n";
 		}
-		if (kindOfOp == TokenType.SLASH) {
+		else if (kindOfOp == TokenType.SLASH) {
 			code += "div     " + leftRegister + ",   " + rightRegister + "\n";
 			code += "mflo    " + resultRegister + "\n";
 		}
-		if (kindOfOp == TokenType.LESSTHAN) {
+		else if (kindOfOp == TokenType.LESSTHAN) {
 			code += "slt     " + resultRegister + ",   " + leftRegister + ",   " + rightRegister + "\n";
 		}
-		if (kindOfOp == TokenType.GREATERTHAN) {
+		else if (kindOfOp == TokenType.GREATERTHAN) {
 			code += "slt     " + resultRegister + ",   " + rightRegister + ",   " + leftRegister + "\n";
 		}
-		if (kindOfOp == TokenType.LESSTHANOREQUALTO) {
+		else if (kindOfOp == TokenType.LESSTHANOREQUALTO) {
 			code += "addi    " + rightRegister + ",   " + rightRegister + ",   1\n";
 			code += "slt     " + resultRegister + ",   " + leftRegister + ",   " + rightRegister + "\n";
 		}
-		if (kindOfOp == TokenType.GREATERTHANOREQUALTO) {
+		else if (kindOfOp == TokenType.GREATERTHANOREQUALTO) {
 			code += "addi    " + leftRegister + ",   " + leftRegister + ",   1\n";
 			code += "slt     " + resultRegister + ",   " + rightRegister + ",   " + leftRegister + "\n";
 		}
-		if (kindOfOp == TokenType.EQUAL) {
+		else if (kindOfOp == TokenType.EQUAL) {
 			hex = generateHex();
 			code += "beq     " + rightRegister + ",   " + leftRegister + ",   EqualID" + hex + "\n";
 			code += "li      " + resultRegister + ",   " + "0\n";
@@ -320,7 +369,7 @@ public class CodeGeneration {
 			code += "li      " + resultRegister + ",   " + "1\n";
 			code += "EndEqualID" + hex + ":\n";
 		}
-		if (kindOfOp == TokenType.NOTEQUAL) {
+		else if (kindOfOp == TokenType.NOTEQUAL) {
 			hex = generateHex();
 			code += "beq     " + rightRegister + ",   " + leftRegister + ",   NotEqualID" + hex + "\n";
 			code += "li      " + resultRegister + ",   " + "1\n";
@@ -351,6 +400,12 @@ public class CodeGeneration {
 		return (code);
 	}
 
+	/**
+	 * Writes code for a variable node.
+	 * @param vNode
+	 * @param resultRegister
+	 * @return
+	 */
 	public static String writeCode(VariableNode vNode, String resultRegister) {
 		String name = vNode.getName();
 		String code = "lw      " + resultRegister + ",   " + name + "\n";

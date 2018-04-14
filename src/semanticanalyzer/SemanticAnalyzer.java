@@ -7,7 +7,8 @@ import syntaxtree.*;
 
 /**
  * Semantic Analysis class goes through the whole syntax tree produced by the
- * Compiler
+ * Compiler and checks to see if there are any errors that would result in an
+ * un-executable file.
  * 
  * @author heechan
  *
@@ -16,23 +17,50 @@ public class SemanticAnalyzer {
 	private ProgramNode pNode;
 	private boolean isFlagged;
 
+	/**
+	 * Getter for isFlagged
+	 * 
+	 * @return
+	 */
 	public boolean isFlagged() {
 		return isFlagged;
 	}
 
+	/**
+	 * Setter for isFlagged
+	 * 
+	 * @param flag
+	 */
 	public void setFlag(boolean flag) {
 		this.isFlagged = flag;
 	}
 
+	/**
+	 * Constructor for a SemanticAnalyzer - the isFlagged field is set to false by
+	 * default.
+	 * 
+	 * @param pNode
+	 */
 	public SemanticAnalyzer(ProgramNode pNode) {
 		this.pNode = pNode;
 		this.isFlagged = false;
 	}
 
+	/**
+	 * Getter for pNode of the Semantic Analyzer.
+	 * 
+	 * @return
+	 */
 	public ProgramNode getPNode() {
 		return pNode;
 	}
 
+	/**
+	 * This method calls "checkVariablesDeclared()" which is a method that checks to
+	 * see if all the variables that are used were declared. The next method it
+	 * calls is "checkVariablesTypes()" which is a method that checks to see if all
+	 * the variables have the correct types.
+	 */
 	public void Analyze() {
 		this.checkVariablesDeclared();
 		this.checkVariablesTypes();
@@ -46,13 +74,21 @@ public class SemanticAnalyzer {
 		}
 	}
 
+	/**
+	 * Method that checks the variable types that are used in the code.
+	 * If there is a real assigned to an integer variable, the code is flagged.
+	 */
 	private void checkVariablesTypes() {
-
 		for (StatementNode sN : pNode.getMain().getStatements()) {
 			traverseStatementType(sN);
 		}
 	}
 
+	/**
+	 * Recursive method that traverses through all statement nodes.
+	 * @param statementNode
+	 * @return
+	 */
 	private DataType traverseStatementType(StatementNode statementNode) {
 		if (statementNode instanceof AssignmentStatementNode) {
 			traverseExpressionType(((AssignmentStatementNode) statementNode).getLvalue());
@@ -75,7 +111,6 @@ public class SemanticAnalyzer {
 						// pNode.getVariables().getVariable().get(i).setDataType(DataType.REAL);
 						// }
 						// }
-
 					}
 				} else if (dtL == DataType.INTEGER || dtE == DataType.INTEGER) {
 					if (dtL == DataType.INTEGER) {
@@ -89,7 +124,6 @@ public class SemanticAnalyzer {
 					}
 				}
 			}
-
 		} else if (statementNode instanceof IfStatementNode) {
 			traverseExpressionType(((IfStatementNode) statementNode).getTest());
 			traverseStatementType(((IfStatementNode) statementNode).getThenStatement());
@@ -115,6 +149,11 @@ public class SemanticAnalyzer {
 		return null;
 	}
 
+	/**
+	 * Recursive method that traverses through all expression nodes.
+	 * @param eNode
+	 * @return
+	 */
 	private DataType traverseExpressionType(ExpressionNode eNode) {
 		if (eNode instanceof ValueNode) {
 		} else if (eNode instanceof VariableNode) {
@@ -143,10 +182,14 @@ public class SemanticAnalyzer {
 		return eNode.getDataType();
 	}
 
+	/**
+	 * Method that checks the variable declared that are used in the code.
+	 * If there are any variables that aren't declared but used, the code is flagged.
+	 */
 	private void checkVariablesDeclared() {
 		ArrayList<VariableNode> variablesDeclared = new ArrayList<VariableNode>();
 		variablesDeclared.addAll(pNode.getVariables().getVariable());
-		
+
 		if (this.pNode instanceof SubProgramNode) {
 			variablesDeclared.addAll((((SubProgramNode) pNode).getParameters()).getParameter());
 		}
@@ -169,6 +212,10 @@ public class SemanticAnalyzer {
 		}
 	}
 
+	/**
+	 * Recursive method that traverses through all statement nodes.
+	 * @param statementNode
+	 */
 	private static ArrayList<VariableNode> traverseStatement(StatementNode statementNode) {
 		ArrayList<VariableNode> vNodes = new ArrayList<VariableNode>();
 
@@ -194,6 +241,10 @@ public class SemanticAnalyzer {
 		return vNodes;
 	}
 
+	/**
+	 * Recursive method that traverses through all expression nodes.
+	 * @param eNode
+	 */
 	private static ArrayList<VariableNode> traverseExpression(ExpressionNode eNode) {
 		ArrayList<VariableNode> vNodes = new ArrayList<VariableNode>();
 		if (eNode instanceof ValueNode) {

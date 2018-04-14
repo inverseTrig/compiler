@@ -13,8 +13,14 @@ import semanticanalyzer.*;
 public class CompilerMain {
 
 	public static void main(String[] args) {
+		if (args.length < 1) {
+			System.out.println("No file.");
+			System.exit(1);
+		}
 		
-		String filename = System.getProperty("user.dir") + "/" + "test.pas";					// This would mean a file test.pas needs to exist in the directory of the project.	
+		String filename = args[0];
+		
+//		String filename = System.getProperty("user.dir") + "/" + "test.pas";					// This would mean a file test.pas needs to exist in the directory of the project.	
 		Parser parser;
 		
 		try {		

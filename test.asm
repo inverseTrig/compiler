@@ -19,20 +19,20 @@ sw      $t0,   f
 lw      $t0,   num
 addi    $t1,   $zero, 3
 slt     $t0,   $t0,   $t1
-beq     $t0,   $zero, IfStatementFailID2619de56
+beq     $t0,   $zero, IfStatementFailID8b63a127
 # Assignment-Statement
 addi    $t0,   $zero, 3
 addi    $t1,   $zero, 2
 add     $t0,   $t0,   $t1
 sw      $t0,   f
-j	IfStatementPassID2619de56
-IfStatementFailID2619de56:
+j	IfStatementPassID8b63a127
+IfStatementFailID8b63a127:
 # Assignment-Statement
 addi    $t0,   $zero, 3
 addi    $t1,   $zero, 2
 sub     $t0,   $t0,   $t1
 sw      $t0,   f
-IfStatementPassID2619de56:
+IfStatementPassID8b63a127:
 # Assignment-Statement
 addi    $t0,   $zero, 5
 sw      $t0,   fi
@@ -54,11 +54,11 @@ move    $a0,   $s0
 syscall
 
 # While-Statement
-WhileIDaf9bf939:
+WhileID955ac4b7:
 lw      $t0,   fi
 addi    $t1,   $zero, 10
 slt     $t0,   $t0,   $t1
-beq     $t0,   $zero, WhileCompleteIDaf9bf939
+beq     $t0,   $zero, WhileCompleteID955ac4b7
 # Assignment-Statement
 addi    $t0,   $zero, 1
 sw      $t0,   f
@@ -67,22 +67,22 @@ lw      $t0,   num
 addi    $t1,   $zero, 1
 add     $t0,   $t0,   $t1
 sw      $t0,   num
-j       WhileIDaf9bf939
-WhileCompleteIDaf9bf939:
+j       WhileID955ac4b7
+WhileCompleteID955ac4b7:
 
 # If-Statement
 lw      $t0,   num
 addi    $t1,   $zero, 2
 slt     $t0,   $t0,   $t1
-beq     $t0,   $zero, IfStatementFailID28a88508
+beq     $t0,   $zero, IfStatementFailIDcfead843
 # Assignment-Statement
 addi    $t0,   $zero, 3
 sw      $t0,   num
-j	IfStatementPassID28a88508
-IfStatementFailID28a88508:
+j	IfStatementPassIDcfead843
+IfStatementFailIDcfead843:
 # Assignment-Statement
 addi    $t0,   $zero, 3
 sw      $t0,   fi
-IfStatementPassID28a88508:
+IfStatementPassIDcfead843:
 
 jr $ra
