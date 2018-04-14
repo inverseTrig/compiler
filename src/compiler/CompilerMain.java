@@ -1,5 +1,6 @@
 package compiler;
 
+import codegeneration.CodeGeneration;
 import parser.Parser;
 import syntaxtree.*;
 import semanticanalyzer.*;
@@ -18,19 +19,22 @@ public class CompilerMain {
 		
 		try {		
 			parser = new Parser(filename, true); 		// Initialize the parser using the constructor.
-			ProgramNode pNode = parser.program();							// Call program() on the parser. This will use recursion to go through the pascal file.
+			ProgramNode pNode = parser.program();		// Call program() on the parser. This will use recursion to go through the pascal file.
 			parser.writeOut(filename);					// This would print out a test.symboltable file to the directory of the project.
-			System.out.println(pNode.indentedToString(0));
 			
-//			sNode = pNode.getMain().getStatements().get(3);
-//
-//			AssignmentStatementNode asn = (AssignmentStatementNode) sNode;
-//			System.out.println(asn.getExpression().dataType);
+//			System.out.println(pNode.indentedToString(0));
 			
 			SemanticAnalyzer sA = new SemanticAnalyzer(pNode);
 			sA.Analyze();
 			pNode = sA.getPNode();
 			
-		} catch (Exception e) { e.printStackTrace(); }
+//			System.out.println(pNode.indentedToString(0));
+			
+			if (sA.isFlagged()) {
+				System.out.println("There are error(s) in the code, thus code generation will not occur.");
+			} else {
+				CodeGeneration.writeCodeToFile(filename, pNode);
+			}
+		} catch (Exception e) { e.printStackTrace(); }	
 	}
 }

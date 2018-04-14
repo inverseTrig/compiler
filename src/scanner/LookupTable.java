@@ -53,6 +53,8 @@ public class LookupTable extends HashMap<String, TokenType> {
 		this.put("*", TokenType.ASTERISK);
 		this.put("/", TokenType.SLASH);
 		this.put(":=", TokenType.BECOMES);
+		this.put("write", TokenType.WRITE);
+		this.put("read", TokenType.READ);
 	}
 }
 

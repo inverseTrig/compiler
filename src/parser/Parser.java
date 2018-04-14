@@ -322,7 +322,10 @@ public class Parser {
 	 * write ( expression )									// this hasn't been implemented
 	 */
 	public StatementNode statement() {
-		if (lookAhead != null && lookAhead.getType() == TokenType.ID) {
+		if (lookAhead != null && lookAhead.getType() == TokenType.BEGIN) {
+			return compound_statement();
+		}
+		else if (lookAhead != null && lookAhead.getType() == TokenType.ID) {
 			if (this.symTab.isKind(lookAhead.getLexeme(), Kind.VARIABLE)) {
 				AssignmentStatementNode assignStatNode = new AssignmentStatementNode();
 				assignStatNode.setLvalue(variable());
@@ -336,9 +339,6 @@ public class Parser {
 			else {
 				error("statement().VARorPROC");
 			}
-		}
-		else if (lookAhead != null && lookAhead.getType() == TokenType.BEGIN) {
-			return compound_statement();
 		}
 		else if (lookAhead != null && lookAhead.getType() == TokenType.IF) {
 			IfStatementNode ifStatNode = new IfStatementNode();
@@ -357,6 +357,24 @@ public class Parser {
 			match(TokenType.DO);
 			whileStatNode.setDoStatement(statement());
 			return whileStatNode;
+		}
+		else if (lookAhead != null && lookAhead.getType() == TokenType.READ) {
+			match(TokenType.READ);
+			match(TokenType.LPARENTHESES);
+			VariableNode vNode = new VariableNode(lookAhead.getLexeme());
+			vNode.setDataType( this.symTab.getDataType(vNode.getName()) );
+			ReadStatementNode readStatNode = new ReadStatementNode(vNode);
+			match(TokenType.ID);
+			match(TokenType.RPARENTHESES);
+			return readStatNode;
+		}
+		else if (lookAhead != null && lookAhead.getType() == TokenType.WRITE) {
+			match(TokenType.WRITE);
+			match(TokenType.LPARENTHESES);
+			ExpressionNode eNode = expression();
+			WriteStatementNode writeStatNode = new WriteStatementNode(eNode);
+			match(TokenType.RPARENTHESES);
+			return writeStatNode;
 		}
 		else {
 			error("statement()");

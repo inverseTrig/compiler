@@ -130,13 +130,10 @@ public class SymbolTable {
 	 */
 	@Override
 	public String toString() {
-		String s = "Key\t\t\t\tEntry\t\t\t\tDataType\n--------------------------------------------\n";
+		String s = String.format("%-10s\t\t%-10s\t\t%-10s\n", "Key", "Entry", "DataType");
+		s += "--------------------------------------------------------------------------------\n";
 		for (Entry<String, DataStorage> entry: this.global.entrySet()) {
-			if (entry.getKey().length() > 11)s += entry.getKey() + "\t" + entry.getValue().getKind();
-			else if (entry.getKey().length() > 7) s += entry.getKey() + "\t\t" + entry.getValue().getKind();
-			else if (entry.getKey().length() > 3) s += entry.getKey() + "\t\t\t" + entry.getValue().getKind();
-			else s += entry.getKey() + "\t\t\t\t" + entry.getValue().getKind();
-			s += "\t\t\t\t" + entry.getValue().getDataType() + "\n";
+			s += String.format("%-14s\t\t%-14s\t\t%-14s\n", entry.getKey(), entry.getValue().getKind(), entry.getValue().getDataType());
 		}
 		return s;
 	}
