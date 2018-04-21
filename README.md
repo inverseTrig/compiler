@@ -30,12 +30,17 @@ This project is for Programming Languages and Compilers course, keystone for Com
 - SemanticAnalyzer.java – contains the code that uses the produced syntax tree and checks to see if any of the below conditions are unmet. If a condition is unmet, code generation would not occur and the user would know what needs to be changed:
   - All variables are declared before being used.
   - ExpressionNodes will hold a type, and these types must match across assignments.
-  
+
 #### /src/codegeneration/
 - CodeGeneration.java – contains the code that uses the syntax tree that the semantic analyzer goes over to produce assembly language code.
 
 #### /src/compiler/
 - CompilerMain.java – Contains the main for the compiler; primarily, as of now, to test the production of code in assembly language.
+
+### Final Product
+#### /product/
+- KangCompiler.jar – Final product of the project. Running this .jar file with a .pas file in the same directory would result in the production of three files: a symbol table, syntax tree, and the final assembly code.ad
+- UserManual.pdf – As its name suggests, a user manual to use the final product.
 
 The [Software Design Document](https://github.com/inverseTrig/compiler/blob/master/documentation/SDD.pdf) can be found in /documentation/
 
