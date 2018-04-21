@@ -35,7 +35,7 @@ public class CompilerMain {
 			pNode = sA.getPNode();
 			
 			sA.writeCodeToFile(filename);
-			
+//			System.out.println(sA.isFlagged());
 //			System.out.println(pNode.indentedToString(0));
 			
 			if (sA.isFlagged()) {

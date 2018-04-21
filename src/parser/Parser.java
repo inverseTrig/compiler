@@ -47,7 +47,7 @@ public class Parser {
 		
 		try {
 			lookAhead = scanner.nextToken();
-		} catch (IOException e) {error("Scan error"); }
+		} catch (IOException e) {error("Scan error."); }
 	}
 	
 	/**

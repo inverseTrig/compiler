@@ -118,7 +118,7 @@ public class SemanticAnalyzer {
 						System.out.println("Variable " + ((AssignmentStatementNode) statementNode).getLvalue().getName()
 								+ " wasn't declared as real, but is being assigned a real.");
 						((AssignmentStatementNode) statementNode).getLvalue().setDataType(DataType.REAL);
-						isFlagged = true;
+						this.isFlagged = true;
 						// for (int i = 0; i < pNode.getVariables().getVariable().size(); i ++) {
 						// if
 						// (pNode.getVariables().getVariable().get(i).getName().equals(((AssignmentStatementNode)
@@ -132,7 +132,7 @@ public class SemanticAnalyzer {
 						System.out.println("Variable " + ((AssignmentStatementNode) statementNode).getLvalue().getName()
 								+ " is being assigned to something with unknown datatype.");
 						((AssignmentStatementNode) statementNode).getExpression().setDataType(DataType.INTEGER);
-						isFlagged = true;
+						this.isFlagged = true;
 					}
 					if (dtE == DataType.INTEGER) {
 						// DO NOTHING HERE. THIS SHOULDN'T BE POSSIBLE.
@@ -217,7 +217,7 @@ public class SemanticAnalyzer {
 		for (VariableNode sN : variablesUsed) {
 			if (!variablesDeclared.contains(sN)) {
 				System.out.println("Variable " + sN.getName() + " is used but was never declared.");
-				isFlagged = true;
+				this.isFlagged = true;
 			}
 		}
 
