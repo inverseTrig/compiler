@@ -53,8 +53,8 @@ public class CodeGeneration {
 	public static String writeCodeForRoot(ProgramNode root) {
 		String code = "";
 		code += "    .data\n\n"
-			 +  "promptuser:    .asciiz \"Enter value: \"" + "\n";
-//			 +  "newline:       .asciiz \"\\n\"" + "\n";
+			 +  "promptuser:    .asciiz \"Enter value: \"" + "\n"
+			 +  "newline:       .asciiz \"\\n\"" + "\n";
 		if (root.getVariables() != null) { code += writeCode(root.getVariables()); }
 	
 //		if (root.getFunctions() != null) {
@@ -282,10 +282,10 @@ public class CodeGeneration {
 			code += "syscall\n";
 		}
 		
-//		code += "# New Line\n"
-//				+ "li      $v0,   4\n"
-//				+ "la      $a0,   newline\n"
-//				+ "syscall\n";
+		code += "# New Line\n"
+				+ "li      $v0,   4\n"
+				+ "la      $a0,   newline\n"
+				+ "syscall\n";
 		
 		return code;
 	}

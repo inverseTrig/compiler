@@ -1,5 +1,9 @@
 package semanticanalyzer;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import scanner.TokenType;
@@ -53,6 +57,17 @@ public class SemanticAnalyzer {
 	 */
 	public ProgramNode getPNode() {
 		return pNode;
+	}
+	
+	public void writeCodeToFile(String filename) {
+		PrintWriter write;
+		try {
+			write = new PrintWriter(new BufferedWriter (new FileWriter(filename.substring(0, filename.length() - 4) + ".syntaxtree")));
+			write.println(pNode.indentedToString(0));
+			write.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

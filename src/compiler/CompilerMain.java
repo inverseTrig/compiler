@@ -34,6 +34,8 @@ public class CompilerMain {
 			sA.Analyze();
 			pNode = sA.getPNode();
 			
+			sA.writeCodeToFile(filename);
+			
 //			System.out.println(pNode.indentedToString(0));
 			
 			if (sA.isFlagged()) {
