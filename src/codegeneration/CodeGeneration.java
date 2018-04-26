@@ -18,6 +18,7 @@ import syntaxtree.*;
 public class CodeGeneration {
 
 	private static int currentTRegister = 0;
+	private static int currentFRegister = 0;
 	private static String hex = new String();
 
 	private static String generateHex() {
@@ -176,9 +177,16 @@ public class CodeGeneration {
 	public static String writeCode(AssignmentStatementNode node) {
 		String code = "# Assignment-Statement\n";
 		ExpressionNode expression = node.getExpression();
-		String rightRegister = "$t" + currentTRegister;
-		code += writeCode(expression, rightRegister);
-		code += "sw      $t" + currentTRegister + ",   " + node.getLvalue() + "\n";
+		if (expression.getDataType() == DataType.REAL) {
+
+			String rightRegister = "$f" + currentFRegister;
+			code += writeCode(expression, rightRegister);
+			code += "sw      $f" + currentFRegister + ",   " + node.getLvalue() + "\n";
+		} else {
+			String rightRegister = "$t" + currentTRegister;
+			code += writeCode(expression, rightRegister);
+			code += "sw      $t" + currentTRegister + ",   " + node.getLvalue() + "\n";
+		}
 		return (code);
 	}
 
@@ -253,7 +261,9 @@ public class CodeGeneration {
 			code += "syscall\n";
 			code += "sw      $v0,   " + node.getName().getName() + "\n";
 		} else if (dT == DataType.REAL) {
-			// gotta do dis
+			code += "li      $v0,   6\n";
+			code += "syscall\n";
+			code += "sw      $v0,   " + node.getName().getName() + "\n";
 		}
 		
 		return (code);
@@ -325,11 +335,21 @@ public class CodeGeneration {
 	 */
 	public static String writeCode(OperationNode opNode, String resultRegister) {
 		String code;
+		String leftRegister = "";
+		String rightRegister = "";
 		ExpressionNode left = opNode.getLeft();
-		String leftRegister = "$t" + currentTRegister++;
+		if (left.getDataType() == DataType.REAL) {
+			leftRegister = "$f" + currentFRegister++;
+		} else {
+			leftRegister = "$t" + currentTRegister++;
+		}
 		code = writeCode(left, leftRegister);
 		ExpressionNode right = opNode.getRight();
-		String rightRegister = "$t" + currentTRegister++;
+		if (left.getDataType() == DataType.REAL) {
+			rightRegister = "$f" + currentFRegister++;
+		} else {
+			rightRegister = "$t" + currentTRegister++;
+		}
 		code += writeCode(right, rightRegister);
 		TokenType kindOfOp = opNode.getOperation();
 		if (kindOfOp == TokenType.PLUS) {
@@ -379,7 +399,8 @@ public class CodeGeneration {
 			code += "EndNotEqualID" + hex + ":\n";
 		}
 
-		currentTRegister -= 2;
+		currentTRegister = 0;
+		currentFRegister = 0;
 		return (code);
 	}
 

@@ -1,7 +1,7 @@
 ## Pascal to MIPS Compiler
 
 ### Introduction
-This project is for Programming Languages and Compilers course, keystone for Computer Science majors at Augsburg University. It contains a compiler in Java for Pascal, to finally, convert the code to MIPS, assembly language. Below are its components:
+This project is for Programming Languages and Compilers course, keystone for Computer Science majors at Augsburg University. It contains a compiler in Java for Pascal, to finally, convert the code to MIPS, assembly language. And whaddayaknow? Real values are well handled! Wow! Below are its components:
 
 ### Implemented Components
 #### /src/scanner/
